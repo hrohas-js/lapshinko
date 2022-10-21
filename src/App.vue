@@ -1,30 +1,304 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div ref="main" class="app">
+    <router-view/>
+  </div>
 </template>
 
+<script>
+import Header from "@/components/header/Header";
+
+export default {
+  name: 'App',
+  components: {Header},
+  mounted() {
+    this.$store.commit('SET_DISPLAY_WIDTH', this.$refs.main.getBoundingClientRect().width);
+    window.addEventListener("resize", () => {
+      this.$store.commit('SET_DISPLAY_WIDTH', this.$refs.main.getBoundingClientRect().width);
+    });
+  },
+}
+</script>
+
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap');
+
+@font-face {
+  font-family: 'Aqum2';
+  src: url('~@/assets/fonts/Aqum2/Aqum2Smallcaps.otf');
+  font-weight: normal;
+  font-style: normal;
 }
 
-nav {
-  padding: 30px;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+input {
+  border: 1px solid black;
+  border-radius: 0;
+  outline: none;
+}
 
-    &.router-link-exact-active {
-      color: #42b983;
+html {
+  font-family: 'Mulish', sans-serif;
+  font-weight: 400;
+  height: 100%;
+  line-height: 20px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+h1, h2, h3, h4, h5 {
+  font-size: unset;
+  font-weight: normal;
+}
+
+
+.wrapper {
+  max-width: rem(1280);
+  margin: 0 auto;
+}
+
+.container {
+  margin: rem(56) 0 0;
+}
+
+._box-gap_sm {
+  margin-top: rem(35);
+}
+
+._box-gap_bg {
+  margin-top: rem(40);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: rem(40);
+}
+
+.section-title {
+  display: flex;
+  gap: rem(8);
+}
+
+._section-banner {
+  width: 100%;
+  align-items: flex-end;
+  padding-bottom: rem(54);
+
+  img {
+    height: rem(40);
+  }
+}
+
+.page-banner {
+  height: rem(200);
+  display: flex;
+}
+
+._title {
+  font-family: 'Aqum2';
+  font-weight: 900;
+  font-size: rem(32);
+  line-height: rem(40);
+  color: #090A08;
+  text-transform: uppercase;
+}
+
+._mini-title {
+  font-weight: 700;
+  font-size: rem(16);
+  line-height: rem(20);
+  color: #090A08;
+}
+
+
+._sub-title {
+  font-family: 'Aqum2';
+  font-weight: 900;
+  font-size: rem(18);
+  line-height: rem(23);
+  color: #090A08;
+  text-transform: uppercase;
+}
+
+.link-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+._link {
+  font-family: 'Mulish';
+  font-style: normal;
+  font-weight: 400;
+  font-size: rem(14);
+  line-height: rem(18);
+  color: #585858;
+  border-bottom: 1px solid #D9AC94;
+  cursor: pointer;
+  width: fit-content;
+}
+
+._button {
+  background: radial-gradient(146.15% 470.67% at 52.25% 118.27%, rgba(3, 102, 52, 0.2) 0%, rgba(3, 102, 52, 0.2) 100%), linear-gradient(81.93deg, #629C42 0.16%, #BFE82A 113.53%);
+  box-shadow: 0px 2px 2px 0px rgb(147 187 0 / 60%), 0px 19px 22px -5px rgb(3 102 52 / 53%), inset 0px 0px 8px rgb(255 255 255 / 37%);
+  color: #F9F9F9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: rem(8);
+  font-weight: 700;
+  transition: filter 0.4s;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(1.12);
+  }
+}
+
+._button_disable {
+  background: #F9F9F9;
+  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  mix-blend-mode: luminosity;
+  color: #FFFFFF
+}
+
+._button_mobile {
+  width: fit-content;
+  padding: rem(12) rem(29);
+  margin: 0 auto;
+}
+
+.multi-range-slider {
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: unset !important;
+  padding: rem(45) 0 !important;
+  .bar {
+    height: rem(3) !important;
+    .bar-left {
+      padding: 0 !important;
     }
+    .bar-left, .bar-right {
+      background-color: #C0C0C0 !important;
+      box-shadow: none !important;
+      border-radius: unset !important;
+    }
+    .bar-inner {
+      background-color: #D9AC94 !important;
+      box-shadow: none !important;
+      border-radius: unset !important;
+      border: none !important;
+    }
+  }
+  .caption {
+    display: flex !important;
+    bottom: rem(-35) !important;
+    * {
+      background-color: unset !important;
+      color: #C0C0C0 !important;
+      box-shadow: none !important;
+      border-radius: unset !important;
+      font-size: rem(16) !important;
+    }
+  }
+  .thumb:before {
+    width: rem(16) !important;
+    height: rem(16) !important;
+    box-shadow: none !important;
+    background-color: #629C42 !important;
+    border: none !important;
+  }
+}
+
+@media (max-width: em(1300, 16)) {
+  .wrapper {
+    padding-right: rem(16);
+    padding-left: rem(16);
+  }
+}
+
+@media (max-width: em(1300, 16)) and (min-width: em(320, 16)) {
+  .section-header {
+    margin-bottom: calc(1.53125rem + (40 - 24.5) * ((100vw - 20rem) / (1300 - 320)));
+  }
+}
+
+
+@media (max-width: em(1250, 16)) and (min-width: em(320, 16)) {
+  ._title {
+    font-size: calc(0.9375rem + (32 - 15) * ((100vw - 20rem) / (1250 - 320)));
+  }
+}
+
+@media(max-width: rem(1024)) {
+  .container {
+    margin-top: rem(40);
+  }
+  ._mini-title {
+    font-weight: 600;
+  }
+}
+
+@media (max-width: em(1024, 16)) and (min-width: em(320, 16)) {
+  .section-title {
+    gap: calc(1rem + (8 - 16) * ((100vw - 20rem) / (1023 - 320)));
+  }
+  ._sub-title {
+    font-size: calc(0.9375rem + (18 - 15) * ((100vw - 20rem) / (1023 - 320)));
+  }
+  ._mini-title {
+    font-size: calc(0.875rem + (16 - 14) * ((100vw - 20rem) / (1023 - 320)));
+    line-height: calc(1.125rem + (20 - 18) * ((100vw - 20rem) / (1023 - 320)));
+  }
+}
+
+@media (max-width: em(900, 16)) and (min-width: em(320, 16)) {
+  ._section-banner {
+    padding-bottom: calc(0.875rem + (54 - 14) * ((100vw - 20rem) / (900 - 320)));
+  }
+}
+
+@media (max-width: em(320, 16)) {
+  .section-title {
+    gap: rem(14);
+  }
+  ._title {
+    font-size: rem(15);
+  }
+  ._sub-title {
+    font-size: rem(15);
+  }
+  ._mini-title {
+    font-size: rem(14);
+    line-height: rem(18)
+  }
+  .section-header {
+    margin-bottom: rem(24.5);
+  }
+  ._section-banner {
+    padding-bottom: rem(14);
   }
 }
 </style>
