@@ -9,12 +9,12 @@
         <h2 class="_sub-title">категории</h2>
       </div>
       <ul class="offer-position eat">
-        <li>Говядина</li>
-        <li>Свинина</li>
-        <li>Фарш</li>
-        <li>Колбаса,сардельки</li>
-        <li>Купаты,балык</li>
-        <li>Тушенка,гуляш</li>
+        <li v-for="item in categories" :key="item.id" :class="{active:item.id == $route.params.categoryId}">
+          <router-link :to="{ name: `CatalogBody`, params: { categoryId:item.id, subcategoryId:'all'}}">{{
+              item.name
+            }}
+          </router-link>
+        </li>
       </ul>
       <div class="chose-offer">
         <div class="choose-elem">
@@ -24,21 +24,24 @@
       <ul class="offer-position">
         <li>
           <div class="offer">
-            <input type="radio" id="sale" name="offer" v-model="options" value="sale" class="custom-radio" @change="sendOptions">
+            <input type="radio" id="sale" name="offer" v-model="options" value="sale" class="custom-radio"
+                   @change="sendOptions">
             <label for="sale">Со скидкой</label>
           </div>
           <span class="count-position">(300)</span>
         </li>
         <li>
           <div class="offer">
-            <input type="radio" id="new" name="offer" v-model="options" value="new" class="custom-radio" @change="sendOptions">
+            <input type="radio" id="new" name="offer" v-model="options" value="new" class="custom-radio"
+                   @change="sendOptions">
             <label for="new">Новинка</label>
           </div>
           <span class="count-position">(300)</span>
         </li>
         <li>
           <div class="offer">
-            <input type="radio" id="promo" name="offer" v-model="options" value="promo" class="custom-radio" @change="sendOptions">
+            <input type="radio" id="promo" name="offer" v-model="options" value="promo" class="custom-radio"
+                   @change="sendOptions">
             <label for="promo">Aкци</label>
           </div>
           <span class="count-position">(300)</span>
@@ -51,31 +54,31 @@
         <div class="range-slider">
           <div class="filter-container">
             <div class="show-filter">
-              <input type="number" class="show-filter__elem" v-model.number="MinValue" min="250" @input="FilterValidatorMin">
+              <input type="number" class="show-filter__elem"
+                     v-model.number="minValue"
+                     @keydown="focus"
+                     @blur="FilterValidatorMin">
               <span class="show-filter__text">от</span>
             </div>
             <span>-</span>
             <div class="show-filter">
-              <input type="number" class="show-filter__elem" v-model.number="MaxValue" max="1000">
+              <input type="number" class="show-filter__elem"
+                     v-model.number="maxValue"
+                     @keydown="focus"
+                     @blur="FilterValidatorMax">
               <span class="show-filter__text">до</span>
             </div>
           </div>
-          <multi-range-slider
-              :min="100"
-              :max="3000"
-              :step="1"
-              :rangeMargin="100"
-              :ruler="false"
-              :label="false"
-              :minValue="barMinValue"
-              :maxValue="barMaxValue"
-              :minCaption="barMinValue+' ₽'"
-              :maxCaption="barMaxValue+' ₽'"
-              @input="UpdateValues"
+          <Slider
+              v-model="value"
+              tooltipPosition="bottom"
+              :min="min"
+              :max="max"
+              @input="changeSlider"
           />
         </div>
       </div>
-      <div class="clear-button">
+      <div class="clear-button" @click="clearAll">
         Сбросить все
       </div>
     </div>
@@ -83,41 +86,100 @@
 </template>
 
 <script>
-import MultiRangeSlider from "multi-range-slider-vue";
+import Slider from '@vueform/slider'
 
 export default {
   name: 'Filter',
+  props: {
+    min: {
+      type: Number,
+      default: 0
+    },
+    max: {
+      type: Number,
+      default: 1000
+    }
+  },
   data: () => ({
     options: '',
-    barMinValue: 100,
-    barMaxValue: 3000,
-    MinValue:100,
-    MaxValue:3000
+    value: [20, 40],
+    minValue: 0,
+    maxValue: 1000
   }),
+  mounted() {
+    this.minValue = this.min;
+    this.maxValue = this.max;
+    this.value = [this.min, this.max];
+  },
+  watch: {
+    min: function (newValue) {
+      this.minValue = newValue;
+      this.value[0] = newValue;
+    },
+    max: function (newValue) {
+      this.maxValue = newValue
+      this.value[1] = newValue;
+    },
+    minValue:function (newValue){
+      this.$store.commit('catalogSettings/SET_MIN_PRICE',newValue);
+    },
+    maxValue: function (newValue){
+      this.$store.commit('catalogSettings/SET_MAX_PRICE',newValue)
+    }
+  },
   components: {
-    MultiRangeSlider
+    Slider
+  },
+  computed: {
+    categories() {
+      return this.$store.getters["category/mainCategories"];
+    },
   },
   methods: {
-    UpdateValues(e) {
-      this.barMinValue = e.minValue;
-      this.barMaxValue = e.maxValue;
-    },
-    FilterValidatorMin(){
-      if(this.barMinValue > this.MinValue){
-        this.MinValue = this.barMinValue
+    FilterValidatorMin() {
+      if (this.min < this.minValue) {
+        this.value[0] = this.minValue;
+      } else {
+        this.value[0] = this.min;
+        this.minValue = this.min;
       }
     },
-    sendOptions(){
-      if(this.options != ''){
-        this.$store.commit('catalogSettings/SЕT_PARAMS',this.options);
+    FilterValidatorMax() {
+      if (this.max > this.maxValue) {
+        this.value[1] = this.maxValue
+      } else {
+        this.value[1] = this.max;
+        this.maxValue = this.max;
       }
+    },
+    focus(e) {
+      if (e.keyCode == '13') {
+        e.target.blur()
+      }
+    },
+    sendOptions() {
+      if (this.options != '') {
+        this.$store.commit('catalogSettings/SЕT_PARAMS', this.options);
+      }
+    },
+    clearAll() {
+      this.$router.push('/catalogBody/all/all');
+    },
+    changeSlider(value) {
+      this.maxValue = value[1];
+      this.minValue = value[0];
+    }
   },
 
-  }
 }
 </script>
+<style src="@vueform/slider/themes/default.css">
+  .
+</style>
 
 <style scoped lang="scss">
+
+
 .filter {
   flex: 1 1 20%;
   background: #F9F9F9;
@@ -165,6 +227,14 @@ export default {
 
   li:first-child {
     margin-top: 0;
+  }
+}
+
+.active {
+  font-weight: 900;
+
+  a {
+    color: #036534;
   }
 }
 
@@ -225,29 +295,34 @@ export default {
   align-items: center;
   gap: rem(6);
 }
-.show-filter{
+
+.show-filter {
   position: relative;
 }
+
 .show-filter__elem {
   font-family: 'Mulish';
-  max-width: rem(110);
+  max-width: rem(135);
   border: 1px solid #C0C0C0;
   padding: rem(10) rem(6) rem(10) rem(49);
   font-weight: 400;
   font-size: rem(16);
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
 }
-.show-filter__text{
+
+.show-filter__text {
   position: absolute;
   font-size: rem(14);
   color: #C0C0C0;
   left: rem(26);
-  top:  rem(12);
+  top: rem(12);
 }
-.clear-button{
+
+.clear-button {
   margin-top: rem(40);
   text-align: center;
   padding: rem(12) 0;

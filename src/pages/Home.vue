@@ -13,6 +13,7 @@
     <div class="wrapper">
       <news-preview></news-preview>
     </div>
+
   </main>
   <footer>
     <footer-elem></footer-elem>
@@ -29,9 +30,10 @@ import AboutUsBanner from "@/components/AboutUsBanner";
 import NewsPreview from "@/components/news/NewsPreview";
 import FooterElem from "@/components/footer/FooterElem";
 
+
 export default {
   name: 'Home',
-  components: {FooterElem, NewsPreview, AboutUsBanner, Catalog, Categories, Offer, HeaderMenu, Header},
+  components: { FooterElem, NewsPreview, AboutUsBanner, Catalog, Categories, Offer, HeaderMenu, Header},
   computed: {
     width() {
       return this.$store.state.display_width;

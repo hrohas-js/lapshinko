@@ -1,13 +1,15 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
 const Home = () => import("@/pages/Home");
-const Catalog = () => import ("@/pages/Catalog/Catalog");
+const Catalog = () => import ("@/pages/catalog/Catalog");
 const News = () => import('@/pages/news/News');
 const PageNewsItem = () => import('@/pages/news/PageNewsItem');
 const WishList = () => import('@/pages/WIshList');
-const CatalogBody = () => import('@/pages/Catalog/CatalogBody');
+const CatalogBody = () => import('@/pages/catalog/CatalogBody');
 const GoodsCard = () => import('@/pages/GoodsCard');
-const lk = () => import('@/pages/Profile');
+const Profile = () => import('@/pages/Profile');
+const Cart = () => import('@/pages/Cart');
+const CheckOut = () => import('@/pages/CheckOut');
 const routes = [
     {
         path: '/',
@@ -20,7 +22,7 @@ const routes = [
         component: Catalog
     },
     {
-        path: '/catalogBody',
+        path: '/catalogBody/:categoryId/:subcategoryId',
         name: 'CatalogBody',
         component: CatalogBody
     },
@@ -40,14 +42,24 @@ const routes = [
         component: WishList
     },
     {
-        path: '/goodsCard',
+        path: '/goodsCard/:id',
         name: 'GoodsCard',
         component: GoodsCard
     },
     {
         path: '/profile',
-        name: 'lk',
-        component: lk
+        name: 'Profile',
+        component: Profile
+    },
+    {
+        path: '/cart',
+        name: 'Cart',
+        component: Cart
+    },
+    {
+        path: '/checkout',
+        name: 'CheckOut',
+        component: CheckOut
     },
 
 ]

@@ -1,0 +1,35 @@
+<template>
+  <div class="cart-body">
+    <div class="cart-header">
+      <h1 class="_title">корзина</h1>
+      <span v-if="$route.name =='Cart'">Минимальная сумма заказа 2 000 ₽</span>
+    </div>
+    <CartItem></CartItem>
+    <router-link to="/checkout" class="checkout _button" v-if="width >=1025 && $route.name !='Cart'">Перейти к оформлению</router-link>
+  </div>
+</template>
+
+<script>
+import CartItem from "@/components/cart/CartItem";
+export default {
+  name: 'CartBody',
+  components: {CartItem},
+  computed: {
+    width() {
+      return this.$store.state.display_width;
+    },
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.cart-header {
+  margin-bottom: rem(46);
+}
+
+.checkout {
+  max-width: rem(290);
+  margin: rem(56) auto;
+  padding: rem(10) 0;
+}
+</style>

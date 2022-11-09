@@ -5,9 +5,9 @@
       <img src="@/assets/webp/imageHolderMobile.webp" alt="banner" class="banner" v-if="width <= 770">
       <div class="__text _title">
         <span class="__ofer-text">Сделай первый заказ со скидкой 10%</span>
-        <div class="button-catalog">
+        <router-link to="/catalog" class="button-catalog">
           <span>В каталог</span><img src="@/assets/svg/arrowRight.svg" alt="каталог">
-        </div>
+        </router-link>
       </div>
     </div>
     <div class="why-we" v-if="$route.name == 'Home'">
@@ -124,6 +124,7 @@ export default {
   border: 2px solid #FFFFFF;
 
   span {
+    color:#FFFFFF;
     cursor: pointer;
   }
 }

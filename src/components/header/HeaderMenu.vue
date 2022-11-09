@@ -3,11 +3,9 @@
     <router-link to="/catalog" class="_button"><img src="@/assets/svg/buttonMenu.svg" alt="каталог" v-if="width > 1024"><span
         v-if="width<1024">В</span><span>Каталог</span></router-link>
     <ul class="__menu-container">
-      <li class="__item">Молочная&nbsp;продукция</li>
-      <li class="__item">Мясная&nbsp;продукция</li>
-      <li class="__item">овощи</li>
-      <li class="__item">зерно</li>
-      <li class="__item">корма</li>
+      <li class="__item" v-for="item in categories" :key="item.id">
+        <router-link :to="{ name: `CatalogBody`, params: { categoryId:item.id, subcategoryId:'all'}}" class="_sub-title">{{ item.name }}</router-link>
+      </li>
     </ul>
   </menu>
 </template>
@@ -18,6 +16,9 @@ export default {
   computed: {
     width() {
       return this.$store.state.display_width
+    },
+    categories() {
+      return this.$store.getters["category/mainCategories"];
     }
   }
 }
@@ -32,29 +33,33 @@ export default {
 
 .__menu-container {
   display: flex;
+  align-items: center;
   margin-left: rem(30);
   gap: rem(30);
 }
 
 .__item {
-  font-family: 'Aqum2';
-  font-size: rem(18);
-  text-transform: uppercase;
-  color: #585858;
   border-left: 4px dotted #D9AC94;
   padding: rem(13) 0 rem(13) rem(30);
   cursor: pointer;
+  text-align: center;
+
+  a {
+    color: #585858;
+  }
 
   &:first-child {
     padding-left: 0;
     border-left: none;
   }
 }
-._button{
+
+._button {
   width: rem(182);
   height: rem(52);
   padding: rem(10) rem(38);
 }
+
 @media (max-width: em(1250, 16)) and (min-width: em(768, 16)) {
   .__menu-container {
     margin-left: calc(1rem + (30 - 16) * ((100vw - 48rem) / (1250 - 768)));
@@ -63,10 +68,10 @@ export default {
   .__item {
     padding-left: calc(0.9375rem + (30 - 15) * ((100vw - 48rem) / (1250 - 768)));
     padding-right: rem(15);
-    font-size: calc(0.75rem + (18 - 12) * ((100vw - 48rem) / (1250 - 768)));
   }
   .header-menu {
     justify-content: center;
+
     .__menu__item:first-child {
       margin-right: rem(5);
     }

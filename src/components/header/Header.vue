@@ -12,7 +12,7 @@
           <span>Доставка</span>
         </div>
         <router-link to="/news" class="__menu__item" :class="{active:$route.name == 'News'}">
-          <span >Блог</span>
+          <span>Блог</span>
         </router-link>
       </div>
       <div class="header__search">
@@ -23,13 +23,13 @@
         <router-link to="/wishList" class="__user-panel__item">
           <img src="@/assets/svg/wishList.svg" alt="wish list">
         </router-link>
-        <div class="__user-panel__item">
+        <router-link to="/cart" class="__user-panel__item">
           <img src="@/assets/svg/basket.svg" alt="basket">
-        </div>
-        <router-link to="/profile" class="__user-panel__item">
-          <img src="@/assets/svg/lk.svg" alt="basket">
-          <span>Войти</span>
         </router-link>
+        <div class="__user-panel__item">
+          <router-link to="/profile"><img src="@/assets/svg/lk.svg" alt="корзина"></router-link>
+          <span @click="showRegistration">Войти</span>
+        </div>
       </div>
       <div class="header__contacts">
         <a href="callto:89876543210">
@@ -55,11 +55,17 @@
 </template>
 
 <script>
+
 export default {
   name: 'Header',
   computed: {
     width() {
       return this.$store.state.display_width;
+    }
+  },
+  methods: {
+    showRegistration() {
+      this.$store.commit('profile/SET_SHOW_REGISTRATION', true);
     }
   }
 }
@@ -76,10 +82,12 @@ span {
   border-bottom: 1px solid #C0C0C0;
   box-shadow: 0px 2px 6px rgba(21, 27, 19, 0.08);
 }
-.header__container{
+
+.header__container {
   display: flex;
   align-items: center;
 }
+
 .header__logo {
   margin-left: rem(25);
   margin-right: rem(47);
@@ -106,12 +114,15 @@ span {
     }
   }
 }
-.active{
+
+.active {
   border-bottom: 0.5px solid #629C42;
-  span{
+
+  span {
     color: #629C42;
   }
 }
+
 .header__search {
   margin-left: rem(71);
   margin-right: rem(74);

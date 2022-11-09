@@ -1,7 +1,8 @@
 <template>
   <div class="filter-options">
-    <div class="filter-option option" v-if="option != ''">{{ option }} <img src="@/assets/svg/close.svg" alt="закрыть выбранный вариант"></div>
-    <div class="filter-option cancel">Сбросить все</div>
+    <div class="filter-option option" v-if="option != ''">{{ option }} <img src="@/assets/svg/close.svg"
+                                                                            alt="закрыть выбранный вариант"></div>
+    <div class="filter-option cancel" @click="clearAll">Сбросить все</div>
   </div>
 </template>
 
@@ -10,7 +11,7 @@ export default {
   name: 'filterOptions',
   computed: {
     option() {
-      switch (this.$store.state.catalogSettings.sortParams) {
+      switch (this.$store.state.catalogSettings.filterOptionsParams) {
         case 'sale':
           return 'Со скидкой';
           break;
@@ -27,32 +28,40 @@ export default {
           break;
       }
     }
-
-  }
+  },
+  methods:{
+    clearAll() {
+      this.$router.push({name: 'CatalogBody', params: {categoryId: this.$route.params.categoryId, subcategoryId: 'all'}});
+      this.$store.commit('catalogSettings/SЕT_PARAMS','popular');
+    }
+  },
 }
 </script>
 
 <style scoped lang="scss">
-.filter-options{
+.filter-options {
   display: flex;
   align-items: center;
   gap: rem(28);
 }
-.option{
+
+.option {
   min-width: rem(144);
   position: relative;
   padding: rem(15) rem(18) rem(15) rem(18);
   background: #D9AC94;
   color: #F9F9F9;
   font-size: rem(14);
-  img{
+
+  img {
     position: absolute;
     right: rem(18);
-    top:rem(18);
+    top: rem(18);
     cursor: pointer;
   }
 }
-.cancel{
+
+.cancel {
   cursor: pointer;
   padding: rem(12) rem(24);
   border: 2px solid #C0C0C0;

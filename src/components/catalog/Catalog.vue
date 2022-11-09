@@ -1,23 +1,23 @@
 <template>
   <section class="container">
     <div class="section-header">
-    <div class="section-title" v-if="title == 'new' || title == 'card'">
-      <h2 class="_title">
-        Новые поступления
-      </h2>
-      <img src="@/assets/svg/new.svg" alt="новинки">
-    </div>
+      <div class="section-title" v-if="title == 'new' || title == 'card'">
+        <h2 class="_title">
+          Новые поступления
+        </h2>
+        <img src="@/assets/svg/new.svg" alt="новинки">
+      </div>
       <div class="section-title" v-if="title == 'choose'">
         <h2 class="_title">
           выбор покупателей
         </h2>
       </div>
     </div>
-    <div class="choose-container">
-      <CatalogItem></CatalogItem>
-      <CatalogItem></CatalogItem>
-      <CatalogItem></CatalogItem>
-      <CatalogItem></CatalogItem>
+    <div class="choose-container" v-if="title == 'new'">
+      <CatalogItem v-for="item in newList" :key="item.id" :item="item"></CatalogItem>
+    </div>
+    <div class="choose-container" v-if="title == 'choose'">
+      <CatalogItem v-for="item in newList" :key="item.id" :item="item"></CatalogItem>
     </div>
   </section>
 </template>
@@ -28,14 +28,17 @@ import CatalogItem from "@/components/catalog/CatalogItem";
 export default {
   name: 'Catalog',
   components: {CatalogItem},
-  props:['title']
+  props: ['title'],
+  computed: {
+    newList() {
+      return [...this.$store.state.catalog.catalog].slice(0, 4);
+    }
+  }
 
 }
 </script>
 
 <style scoped lang="scss">
-
-
 .choose-container {
   display: flex;
   justify-content: space-between;

@@ -15,13 +15,13 @@
             <img src="@/assets/svg/galleryArrow.svg" alt="переключить картинку">
           </div>
         </div>
-        <div class="goods__description">
-          <h1 class="_title">Сало солёное по-домашнему</h1>
-          <div class="compound">
+        <div class="goods__description" :class="{jcsb:properties == ''}">
+          <h1 class="_title">{{ product.name }}</h1>
+          <div :class="{compound:properties != ''}" v-if="properties != ''">
             <h2>Состав:</h2>
-            <span>сало, соль, перец, чеснок, лавровый лист.</span>
+            <span>{{ properties }}</span>
           </div>
-          <div class="nutritional-value">
+          <div class="nutritional-value" :class="{compound:properties == ''}">
             <h2>Пищевая ценность на 100 г:</h2>
             <div class="__table">
               <div>
@@ -43,9 +43,9 @@
             </div>
           </div>
           <div class="mini-slider">
-            <img src="@/assets/png/GoodsCart/GoodsSmall.webp" alt="продукт">
-            <img src="@/assets/png/GoodsCart/GoodsSmall.webp" alt="продукт">
-            <img src="@/assets/png/GoodsCart/GoodsSmall.webp" alt="продукт">
+            <div class="mini-slider__item" v-for="item in sliderSub" :key="item.id">
+              <img :src="item.img" alt="small-product">
+            </div>
           </div>
         </div>
         <div class="goods__add-to-cart">
@@ -59,7 +59,7 @@
             <div class="__go-to-basket">
               <div class="price">
                 <h2>
-                  420,00 ₽
+                  {{ product.price }} ₽
                 </h2>
                 <span>
                     Цена/ 1 кг
@@ -144,9 +144,9 @@
         <div class="slider">
           <img :src="sliderMain.img" alt="продукт">
           <div class="mini-slider">
-            <img src="@/assets/png/GoodsCart/GoodsSmall.webp" alt="продукт">
-            <img src="@/assets/png/GoodsCart/GoodsSmall.webp" alt="продукт">
-            <img src="@/assets/png/GoodsCart/GoodsSmall.webp" alt="продукт">
+            <div class="mini-slider__item" v-for="item in sliderSub" :key="item.id">
+              <img :src="item.img" alt="small-product">
+            </div>
           </div>
         </div>
         <div class="compound">
@@ -262,7 +262,8 @@ export default {
   data: () => ({
     sliderMain: null,
     sliderSub: null,
-    showDescription: 'desc'
+    showDescription: 'desc',
+    objFlag: false
   }),
   created() {
     this.sliderMain = this.$store.state.product.sliderMain
@@ -278,19 +279,41 @@ export default {
     width() {
       return this.$store.state.display_width;
     },
+    product() {
+      let product = {};
+      [...this.$store.state.catalog.catalog].map(elem => {
+        if (elem.id == this.$route.params.id) {
+          product = elem;
+          this.objFlag = true;
+        }
+      });
+      return product;
+    },
+    properties() {
+      if (this.objFlag) {
+        let props = ''
+        this.product.attributes.forEach(elem => {
+          if (elem.id == 1) {
+            props = elem.options[0];
+          }
+        })
+        return props
+      } else {
+        return ''
+      }
+    }
   },
   methods: {
-    showNextImg(){
+    showNextImg() {
       let temp = this.sliderSub[0];
-      this.sliderSub = this.sliderSub.slice(1,this.sliderSub.length);
+      this.sliderSub = this.sliderSub.slice(1, this.sliderSub.length);
       this.sliderSub.push(this.sliderMain);
       this.sliderMain = temp;
     },
-    showPrevImg(){
+    showPrevImg() {
       let temp = this.sliderSub[this.sliderSub.length - 1];
-      this.sliderSub = this.sliderSub.slice(0,this.sliderSub.length - 1);
-      this.sliderSub = this.sliderSub.splice(0,1,this.sliderMain);
-      console.log(this.sliderSub)
+      this.sliderSub = this.sliderSub.slice(0, this.sliderSub.length - 1);
+      this.sliderSub.unshift(this.sliderMain)
       this.sliderMain = temp;
     }
   }
@@ -320,6 +343,7 @@ export default {
   top: rem(212);
   position: absolute;
   cursor: pointer;
+  user-select: none;
 }
 
 .after {
@@ -336,7 +360,9 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
+.jcsb{
+  justify-content: space-between;
+}
 .compound {
   margin-top: rem(49);
   margin-bottom: rem(90);
@@ -366,7 +392,8 @@ export default {
   padding: rem(8);
   border: 1px solid #C0C0C0;
   filter: drop-shadow(0px 2px 6px rgba(21, 27, 19, 0.08));
-  h2{
+
+  h2 {
     margin-bottom: rem(8);
   }
 }
@@ -390,6 +417,15 @@ export default {
 .mini-slider {
   display: flex;
   gap: rem(24);
+
+  img {
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.mini-slider__item {
+  width: rem(86);
 }
 
 .goods__add-to-cart {

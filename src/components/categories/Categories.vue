@@ -65,6 +65,9 @@ export default {
     justify-items: center;
     row-gap: 8px;
   }
+  ._last{
+    margin-top: rem(8);
+  }
 }
 @media (max-width: em(550, 16)) {
   .categories-container{

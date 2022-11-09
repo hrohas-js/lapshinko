@@ -1,22 +1,32 @@
 <template>
-  <router-link to="/goodsCard" class="food-container" @mouseenter="showMove = true" @mouseleave="showMove = false">
-    <div class="food-item" :class="{'food-item_wish':$route.name =='WishList' && width <= 520, 'w100':$route.name =='WishList'}">
+  <div class="food-container" @mouseenter="showMove = true" @mouseleave="showMove = false">
+    <div class="food-item" :class="{'food-item_wish':$route.name =='WishList' && width <= 520,
+     'w100':$route.name =='WishList', 'modal__item':$route.name =='Profile'}">
       <div class="__choose-container">
         <div class="__img">
           <img src="@/assets/png/news/foods.png" alt="новые поступления">
         </div>
-        <div class="_mini-title __text" v-if="width > 520 || $route.name !='WishList'">Сало солёное по-домашнему</div>
+        <div class="_mini-title __text" v-if="width > 520 && $route.name !='WishList ' && $route.name != 'Profile'">
+          {{ item.name }}
+        </div>
       </div>
-      <div class="__price __text" :class="{'__price_new':$route.name != 'WishList'}" v-if="width >= 1024 && $route.name != 'WishList'">
-        420,00 ₽/кг
+      <div class="__price __text" :class="{'__price_new':$route.name != 'WishList'}"
+           v-if="width >= 1024 && $route.name != 'WishList' && $route.name != 'Profile'">
+        {{ item.price }} ₽/кг
       </div>
-      <div class="__wish-price-container __text" v-if="width < 1024 || $route.name == 'WishList'">
-        <div class="_mini-title __text" v-if="width <=520 && $route.name =='WishList'">Сало солёное по-домашнему</div>
+      <div class="__wish-price-container __text" :class="{'order-gap':$route.name == 'Profile'}"
+           v-if="width < 1024 || $route.name == 'WishList' ||  $route.name == 'Profile'">
+        <div class="_mini-title __text" v-if="width <= 520 && $route.name == 'WishList' || $route.name == 'Profile'">
+          {{ item.name }}
+        </div>
+        <div class="_mini-title __text" v-if="width <= 520 && $route.name != 'WishList'">
+          {{ item.name }}
+        </div>
         <div class="price-button">
-          <div class="__price">
-            420,00 ₽/кг
+          <div class="__price" v-if="$route.name !='Profile'">
+            {{ item.price }} ₽/кг
           </div>
-          <div class="__wish-button" @click="heart = !heart">
+          <div class="__wish-button" @click="heart = !heart" v-if=" $route.name !='Profile'">
             <img src="@/assets/svg/wishbutton.svg" alt="добавить в избранное" v-if="!heart">
             <img src="@/assets/svg/activeHeart.svg" alt="добавить в избранное" v-if="heart">
           </div>
@@ -24,46 +34,68 @@
       </div>
     </div>
     <transition name="fade">
-      <div class="food-item _move" v-if="showMove && width >1024">
+      <div class="food-item _move" v-if="showMove && width >1024 && $route.name !='Profile'">
         <div class="__choose-container __text">
-          <div class="_mini-title">Сало солёное по-домашнему</div>
+          <div class="_mini-title">{{ item.name }}</div>
           <div class="__price">
-            420,00 ₽/кг
+            {{ item.price }} ₽/кг
           </div>
         </div>
         <div class="__description">
-          <span>Состав: сало, соль, перец, чеснок, лавровый лист.</span>
+          <span v-if="this.properties != ''">Состав: {{ this.properties }}</span>
         </div>
         <div class="__shelf-life">
-          Срок хранения: 7 суток от 0 до 6С
+          {{ this.lifetime }}
         </div>
-        <div class="__wish-button" @click="heart = !heart">
-          <img src="@/assets/svg/wishbutton.svg" alt="добавить в избранное" v-if="!heart">
-          <img src="@/assets/svg/activeHeart.svg" alt="добавить в избранное" v-if="heart">
-        </div>
-        <div class="__function-buttons">
-          <div class="details __button">
-            Детали
+        <div class="__buttons">
+          <div class="__wish-button" @click="heart = !heart">
+            <img src="@/assets/svg/wishbutton.svg" alt="добавить в избранное" v-if="!heart">
+            <img src="@/assets/svg/activeHeart.svg" alt="добавить в избранное" v-if="heart">
           </div>
-          <div class="in-basket __button">
-            В&nbsp;Корзину
+          <div class="__function-buttons">
+            <router-link :to="{name:'GoodsCard',params:{id:item.id}}" class="details __button">
+              Детали
+            </router-link>
+            <div class="in-basket __button">
+              В&nbsp;Корзину
+            </div>
           </div>
         </div>
       </div>
     </transition>
-  </router-link>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'CatalogItem',
+  props: ['item'],
   data: () => ({
     showMove: false,
     heart: false
   }),
-  computed:{
-    width(){
+  computed: {
+    width() {
       return this.$store.state.display_width;
+    },
+    attribute() {
+      if (this.item.attributes.length > 1) {
+        return true
+      } else {
+        return false
+      }
+    },
+    properties() {
+      if (this.attribute) {
+        return this.item.attributes[0].options[0];
+      } else {
+        return ''
+      }
+    },
+    lifetime() {
+      if (this.attribute) {
+        return this.item.attributes[2].options[0];
+      }
     }
   }
 }
@@ -72,7 +104,7 @@ export default {
 <style scoped lang="scss">
 
 .fade-enter-active,
-.v-leave-active {
+.fade-leave-active {
   transition: opacity 0.4s ease;
 }
 
@@ -81,9 +113,34 @@ export default {
   opacity: 0;
 }
 
+.__wish-price-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 rem(16) rem(16);
+  flex-direction: column;
+
+  .__price {
+    padding: 0;
+  }
+
+  .__text {
+    padding: 0;
+  }
+}
+
 .food-container {
   position: relative;
   box-shadow: 0px 2px 6px rgba(21, 27, 19, 0.08);
+
+  .food-item_wish {
+    flex-direction: row;
+    height: fit-content;
+  }
+
+  .w100 {
+    width: 100%;
+  }
 }
 
 .food-item {
@@ -94,26 +151,31 @@ export default {
   justify-content: space-between;
 }
 
+.modal__item {
+  flex-direction: row;
+  max-width: rem(480);
+  height: rem(157);
+
+  .__img {
+    height: rem(157);
+
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .__wish-price-container {
+    justify-content: normal;
+    padding-top: rem(32);
+    gap: rem(24);
+  }
+}
+
 .__text {
   padding: 0 rem(16);
 }
 
-.food-item_wish {
-  flex-direction: row;
-  height: fit-content !important;
-  .__wish-price-container {
-    flex-direction: column;
-    .__price{
-      padding: 0;
-    }
-    .__text {
-      padding: 0;
-    }
-  }
-}
-.w100 {
-  width: 100% !important;
-}
 
 .price-button {
   display: flex;
@@ -128,15 +190,11 @@ export default {
   line-height: rem(18);
   color: #585858;
 }
+
 .__price_new {
   padding-bottom: rem(16);
 }
-.__wish-price-container{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 rem(16) rem(16);
-}
+
 ._move {
   width: 100%;
   position: absolute;
@@ -152,10 +210,6 @@ export default {
 
   .__text {
     padding: rem(25) rem(16);
-  }
-
-  .__price {
-    margin-top: rem(48);
   }
 
   .__description, .__shelf-life {
@@ -210,60 +264,89 @@ export default {
     }
   }
 }
-@media (max-width: em(1254, 16)) and (min-width: em(1024, 16)){
-  .food-item{
+
+@media (max-width: em(1254, 16)) and (min-width: em(1024, 16)) {
+  .food-item {
     height: calc(19rem + (352 - 304) * ((100vw - 64rem) / (1254 - 1024)));
   }
-._move{
-  .__price{
-    margin-top:calc(1rem + (48 - 16) * ((100vw - 64rem) / (1254 - 1024))) ;
+  .modal__item {
+    height: auto;
   }
-  .details{
-    padding: calc(0.25rem + (12 - 4) * ((100vw - 64rem) / (1254 - 1024))) calc(1.25rem + (37 - 20) * ((100vw - 64rem) / (1254 - 1024)));
-  }
-  .in-basket{
-    padding: calc(0.25rem + (12 - 4) * ((100vw - 64rem) / (1254 - 1024))) calc(0.9375rem + (29 - 15) * ((100vw - 64rem) / (1254 - 1024)));;
-  }
-  .__button{
-    font-size: calc(0.9375rem + (15 - 16) * ((100vw - 64rem) / (1254 - 1024)));
+  ._move {
+    .__price {
+      margin-top: calc(1rem + (48 - 16) * ((100vw - 64rem) / (1254 - 1024)));
+    }
+
+    .details {
+      padding: calc(0.25rem + (12 - 4) * ((100vw - 64rem) / (1254 - 1024))) calc(1.25rem + (37 - 20) * ((100vw - 64rem) / (1254 - 1024)));
+    }
+
+    .in-basket {
+      padding: calc(0.25rem + (12 - 4) * ((100vw - 64rem) / (1254 - 1024))) calc(0.9375rem + (29 - 15) * ((100vw - 64rem) / (1254 - 1024)));;
+    }
+
+    .__button {
+      font-size: calc(0.9375rem + (15 - 16) * ((100vw - 64rem) / (1254 - 1024)));
+    }
   }
 }
-}
-@media (max-width: em(1023, 16)){
-  .food-item{
+
+@media (max-width: em(1023, 16)) {
+  .food-item {
     max-width: none;
-    .__wish-price-container{
-      gap:rem(8);
+
+    .__wish-price-container {
+      gap: rem(8);
     }
 
   }
 }
-@media (max-width: em(1023, 16)) and (min-width: em(320, 16)){
-   .food-item{
-    height: calc(13.9375rem + (304 - 223) * ((100vw - 20rem) / (1023 - 320)));
-  }
-  .__price__price{
-    font-size: calc(0.75rem + (14 - 12) * ((100vw - 20rem) / (1023 - 320)));
-  }
+
+@media (max-width: em(1023, 16)) and (min-width: em(320, 16)) {
   .food-item {
+    height: calc(13.9375rem + (304 - 223) * ((100vw - 20rem) / (1023 - 320)));
     width: calc(8.5rem + (272 - 136) * ((100vw - 20rem) / (1023 - 320)));
   }
-  .__wish-price-container{
+  .modal__item {
+    width: auto;
+    height: auto;
+  }
+  .__price__price {
+    font-size: calc(0.75rem + (14 - 12) * ((100vw - 20rem) / (1023 - 320)));
+  }
+  .__wish-price-container {
     padding-bottom: calc(0.65625rem + (16 - 10.5) * ((100vw - 20rem) / (1023 - 320)));
     padding-right: calc(0.5rem + (16 - 8) * ((100vw - 20rem) / (1023 - 320)));
   }
 }
-@media (max-width: em(320, 16)){
-  .food-item{
+
+@media (max-width: em(649, 16)) {
+  .modal__item {
+    flex-direction: column;
+    width: 100%;
+
+    img {
+      width: 100%;
+    }
+  }
+  .food-item {
+    .order-gap {
+      gap: rem(40);
+    }
+  }
+}
+
+@media (max-width: em(320, 16)) {
+  .food-item {
     height: rem(223);
   }
-  .__price__price{
+  .__price__price {
     font-size: rem(12)
   }
   .food-item {
     width: rem(136);
   }
-  .__wish-price-container{
+  .__wish-price-container {
     padding-bottom: rem(10.5);
     padding-right: rem(8);
   }

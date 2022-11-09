@@ -1,31 +1,41 @@
 <template>
-  <div class="sub-filter" :class="{active:eat.id == 1}">
-    {{eat.name}}
-  </div>
+  <router-link
+      :to="{name:'CatalogBody', params:{categoryId:$route.params.categoryId, subcategoryId:eat.id}}"
+      :class="{active:eat.id == $route.params.subcategoryId}" class="sub-filter"
+      @click="clearPrice">
+    {{ eat.name }}
+  </router-link>
 </template>
 
 <script>
 export default {
-  props:['eat'],
-  name:'SubFilter'
+  props: ['eat'],
+  name: 'SubFilter',
+  methods: {
+    clearPrice() {
+      this.$store.commit('catalogSettings/SET_MAX_PRICE', null);
+      this.$store.commit('catalogSettings/SET_MIN_PRICE', null);
+    }
+  },
 }
 </script>
 
 <style scoped lang="scss">
 
-.sub-filter{
+.sub-filter {
   cursor: pointer;
-  padding:rem(8) rem(18);
+  padding: rem(8) rem(18);
   gap: rem(10);
   background: #F9F9F9;
-  border-radius: 35px;
+  border-radius: rem(35);
 
-  &:hover{
+  &:hover {
     background: #D9AC94;
     color: #FFFFFF;
   }
 }
-.active{
+
+.active {
   background: #D9AC94;
   color: #FFFFFF;
 }

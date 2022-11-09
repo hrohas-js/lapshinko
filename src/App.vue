@@ -1,15 +1,25 @@
 <template>
   <div ref="main" class="app">
     <router-view/>
+    <Registration v-if="showRegistration"></Registration>
   </div>
 </template>
 
 <script>
 import Header from "@/components/header/Header";
-
+import Registration from "@/components/modal/Registatration";
 export default {
   name: 'App',
-  components: {Header},
+  components: {Header,Registration},
+  computed:{
+    showRegistration(){
+      return this.$store.state.profile.showRegistration
+    }
+  },
+  created() {
+    this.$store.commit('SET_AXIOS_INSTANCE');
+    this.$store.dispatch('FetchAuthToken');
+  },
   mounted() {
     this.$store.commit('SET_DISPLAY_WIDTH', this.$refs.main.getBoundingClientRect().width);
     window.addEventListener("resize", () => {
@@ -72,6 +82,9 @@ h1, h2, h3, h4, h5 {
   font-weight: normal;
 }
 
+.app {
+  position: relative;
+}
 
 .wrapper {
   max-width: rem(1280);
@@ -110,6 +123,31 @@ h1, h2, h3, h4, h5 {
   img {
     height: rem(40);
   }
+}
+.slider-horizontal{
+  height: rem(3) !important;
+  margin-top: rem(22);
+  border-radius: 5%;
+}
+.slider-connect{
+  background:rgba(217, 172, 148, 1) !important;
+}
+.slider-touch-area{
+  background-color: #629C42 !important;
+  border-radius: 100%;
+}
+.slider-handle, slider-handle:focus{
+  box-shadow: none !important;
+}
+.slider-tooltip{
+  background: none !important;
+  border-radius: unset !important;
+  border: none !important;
+  color: #C0C0C0 !important;
+  font-weight: 400 !important;
+}
+.slider-tooltip-bottom:before{
+  display: none;
 }
 
 .page-banner {
@@ -178,10 +216,10 @@ h1, h2, h3, h4, h5 {
 }
 
 ._button_disable {
-  background: #F9F9F9;
+  filter: grayscale(100%);
   box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
   mix-blend-mode: luminosity;
-  color: #FFFFFF
+  color: #FFFFFF;
 }
 
 ._button_mobile {
@@ -205,12 +243,6 @@ h1, h2, h3, h4, h5 {
       box-shadow: none !important;
       border-radius: unset !important;
     }
-    .bar-inner {
-      background-color: #D9AC94 !important;
-      box-shadow: none !important;
-      border-radius: unset !important;
-      border: none !important;
-    }
   }
   .caption {
     display: flex !important;
@@ -227,11 +259,22 @@ h1, h2, h3, h4, h5 {
     width: rem(16) !important;
     height: rem(16) !important;
     box-shadow: none !important;
-    background-color: #629C42 !important;
+
     border: none !important;
   }
 }
-
+.modal {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: rem(16);
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  background: rgba(9, 10, 8, 0.5);
+  padding: 0 rem(16);
+}
 @media (max-width: em(1300, 16)) {
   .wrapper {
     padding-right: rem(16);

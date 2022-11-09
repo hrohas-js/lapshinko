@@ -24,6 +24,9 @@
     </div>
     <div class="save-button _button _button_mobile">Cохранить</div>
   </div>
+  <div class="order__mobile">
+
+  </div>
 </template>
 
 <script>
