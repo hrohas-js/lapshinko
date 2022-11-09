@@ -227,42 +227,6 @@ h1, h2, h3, h4, h5 {
   padding: rem(12) rem(29);
   margin: 0 auto;
 }
-
-.multi-range-slider {
-  box-shadow: none !important;
-  border: none !important;
-  border-radius: unset !important;
-  padding: rem(45) 0 !important;
-  .bar {
-    height: rem(3) !important;
-    .bar-left {
-      padding: 0 !important;
-    }
-    .bar-left, .bar-right {
-      background-color: #C0C0C0 !important;
-      box-shadow: none !important;
-      border-radius: unset !important;
-    }
-  }
-  .caption {
-    display: flex !important;
-    bottom: rem(-35) !important;
-    * {
-      background-color: unset !important;
-      color: #C0C0C0 !important;
-      box-shadow: none !important;
-      border-radius: unset !important;
-      font-size: rem(16) !important;
-    }
-  }
-  .thumb:before {
-    width: rem(16) !important;
-    height: rem(16) !important;
-    box-shadow: none !important;
-
-    border: none !important;
-  }
-}
 .modal {
   width: 100%;
   height: 100%;
