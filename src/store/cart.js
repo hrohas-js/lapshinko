@@ -3,7 +3,7 @@ export const Cart = {
         cart: []
     }),
     getters: {
-        cartList: (state, rootState) => {
+        cartList: (state, getters, rootState) => {
             let list = []
             rootState.catalog.catalog.forEach(elem => {
                 state.cart.forEach(item => {
@@ -25,7 +25,7 @@ export const Cart = {
         },
         DELETE_FROM_CART(state, id) {
             state.cart = state.cart.filter(elem => {
-                return elem.id !== id
+                return elem !== id
             })
         }
     },

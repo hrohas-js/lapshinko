@@ -4,8 +4,11 @@
       <h1 class="_title">корзина</h1>
       <span v-if="$route.name === 'Cart'">Минимальная сумма заказа 1 000 ₽</span>
     </div>
-    <CartItem v-for="item in cart" :key="item.id" :item="item"></CartItem>
-    <router-link to="/checkout" class="checkout _button" v-if="width >=1025 && $route.name !== 'Cart'">Перейти к оформлению</router-link>
+    <div v-if="cart.length > 0" class="cart-list">
+      <CartItem v-for="item in cart" :key="item.id" :item="item"></CartItem>
+    </div>
+    <h2 v-else class="_sub-title">корзина пуста</h2>
+    <router-link to="/checkout" class="checkout _button" v-if="width >=1025 && $route.name !== 'Cart' && cart.length > 0">Перейти к оформлению</router-link>
   </div>
 </template>
 
@@ -23,9 +26,6 @@ export default {
     ...mapGetters('cart', {
       cart: 'cartList'
     })
-  },
-  mounted() {
-    console.log(this.cart)
   }
 }
 </script>

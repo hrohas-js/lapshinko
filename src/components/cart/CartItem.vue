@@ -20,7 +20,7 @@
           </div>
         </div>
         <div class="summary _sub-title" v-if="width > 768">1000 ₽</div>
-        <div class="delete">
+        <div class="delete" @click="deleteFromCart">
           <img src="@/assets/svg/delete.svg" alt="delete">
         </div>
       </div>
@@ -46,6 +46,12 @@ export default {
     ...mapState({
       width: 'displayWidth'
     })
+  },
+  methods: {
+    deleteFromCart() {
+      console.log()
+      this.$store.dispatch('cart/deleteFromCart', this.item.id)
+    }
   }
 }
 </script>
