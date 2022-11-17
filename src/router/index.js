@@ -4,7 +4,7 @@ const Home = () => import("@/pages/Home");
 const Catalog = () => import ("@/pages/catalog/Catalog");
 const News = () => import('@/pages/news/News');
 const PageNewsItem = () => import('@/pages/news/PageNewsItem');
-const WishList = () => import('@/pages/WIshList');
+const WishList = () => import('@/pages/WishList');
 const CatalogBody = () => import('@/pages/catalog/CatalogBody');
 const GoodsCard = () => import('@/pages/GoodsCard');
 const Profile = () => import('@/pages/Profile');
@@ -66,7 +66,13 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
-    routes
+    routes,
+    scrollBehavior: () => {
+        window.scrollTo({top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
+    }
 })
 
 export default router

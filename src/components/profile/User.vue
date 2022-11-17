@@ -4,35 +4,113 @@
     <div class="user__contact-info">
       <div class="__elem">
         <span>ФИО</span>
-        <input type="text" placeholder="ФИО">
+        <div class="button-box">
+          <input
+              :class="{'input-error':!isFullFIO}"
+              type="text"
+              :placeholder="name"
+              v-model="newName"
+              @input="newName = newName.replace(/[^ a-zа-яё]/ui,'')"
+          >
+          <span v-if="!isFullFIO" class="input-error-text profile-error">
+              Введите ФИО полностью!
+            </span>
+        </div>
         <div class="choose-legal-status">
           <div class="__item">
-            <input type="radio" name="legalStatus" id="person" class="custom-radio">
+            <input
+                type="radio"
+                name="legalStatus"
+                id="person"
+                class="custom-radio"
+                value="person"
+                v-model="userStatus"
+            >
             <label for="person">Физическое лицо</label>
           </div>
           <div class="__item">
-            <input type="radio" name="legalStatus" id="legal" class="custom-radio">
+            <input
+                type="radio"
+                name="legalStatus"
+                id="legal"
+                class="custom-radio"
+                value="legal"
+                v-model="userStatus"
+            >
             <label for="legal">Юридическое лицо</label>
           </div>
         </div>
       </div>
       <div class="__elem">
         <span>Загрузить фото:</span>
-        <input type="text" placeholder="Выберите фото..">
-        <div class="show">Обзор</div>
+        <input type="text" readonly placeholder="Выберите фото.." v-model="imageName">
+        <label class="show" for="photo">
+          <div>Обзор</div>
+          <input type="file" id="photo" class="file-hidden" @change="updateUserImage">
+        </label>
       </div>
     </div>
-    <div class="save-button _button _button_mobile">Cохранить</div>
-  </div>
-  <div class="order__mobile">
-
+    <div class="save-button _button _button_mobile" @click="saveUserSettings">
+      Cохранить
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'user',
-
+  data: () => ({
+    userImage: null,
+    imageName: '',
+    userStatus: '',
+    newName: '',
+    isFullFIO: true
+  }),
+  computed: {
+    ...mapGetters('profile',{
+      name: 'fullUserName',
+      currentStatus: 'userStatus'
+    })
+  },
+  mounted() {
+    this.userStatus = this.currentStatus;
+  },
+  methods: {
+    updateUserImage(e) {
+      this.userImage = e.target.files;
+      this.imageName = this.userImage[0].name;
+    },
+    saveUserSettings() {
+      if (this.userImage !== null) {
+        this.$store.dispatch('profile/uploadPhoto', this.userImage);
+      }
+      if (this.newName !== '') {
+        const temp = this.newName.split(' ');
+        if(temp.length == 3) {
+          this.isFullFIO = true;
+          this.$store.dispatch('profile/updateUser', {
+            meta: {
+              name: temp[1],
+              surname: temp[0],
+              father_name: temp[2]
+            }
+          })
+        }
+        else {
+          this.isFullFIO = false;
+        }
+      }
+      if (this.userStatus !== '' && this.userStatus !== this.currentStatus) {
+        this.$store.dispatch('profile/updateUser', {
+          meta: {
+            user_status: this.userStatus
+          }
+        })
+      }
+    }
+  }
 }
 </script>
 
@@ -130,9 +208,20 @@ export default {
   background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/profile/legal.svg") center no-repeat;
 }
 
+.file-hidden {
+  display: none;
+}
+
 ._button_mobile{
   margin: rem(86) 0 0;
 }
+
+.profile-error {
+  bottom: rem(-30);
+  top: unset;
+  text-align: left;
+}
+
 @media (max-width: em(1024,16)) {
   .user {
     max-width: 100%;

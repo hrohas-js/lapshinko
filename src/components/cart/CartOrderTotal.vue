@@ -45,7 +45,7 @@ export default {
   }),
   computed: {
     width() {
-      return this.$store.state.display_width;
+      return this.$store.state.displayWidth;
     },
     progressBar() {
       let onePercent = this.mimCount / 100;

@@ -1,6 +1,6 @@
 export const Catalog = {
     state: () => ({
-        catalog:[],
+        catalog: [],
     }),
     mutations: {
         SET_CATALOG(state, item){
@@ -9,7 +9,7 @@ export const Catalog = {
         }
     },
     actions: {
-        async FetchCatalog({rootState, commit}, post_info){
+        async FetchCatalog({rootState, commit}){
             const response = await rootState.axiosInstance.get('wc/v3/products', {
                 headers: {
                     Authorization: `Bearer ${rootState.jwt}`,
@@ -21,5 +21,5 @@ export const Catalog = {
             commit('SET_CATALOG', response.data);
         }
     },
-    namespaced: true,
+    namespaced: true
 }

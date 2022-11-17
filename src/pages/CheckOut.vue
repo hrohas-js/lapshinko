@@ -248,7 +248,7 @@ export default {
   },
   computed: {
     width() {
-      return this.$store.state.display_width;
+      return this.$store.state.displayWidth;
     },
     confirmCheckout() {
       if (this.optionDelivery.action && this.optionPickup.action && this.optionPay.action) {

@@ -38,7 +38,7 @@ export default {
   props:['title'],
   computed:{
     width(){
-      return this.$store.state.display_width
+      return this.$store.state.displayWidth
     },
     reverse(){
       return [...this.$store.state.category.PopularCategory].reverse()

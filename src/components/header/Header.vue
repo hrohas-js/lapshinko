@@ -16,7 +16,7 @@
         </router-link>
       </div>
       <div class="header__search">
-        <input type="text" placeholder="поиск">
+        <input type="text" placeholder="Поиск">
         <img src="@/assets/svg/search.svg" alt="search">
       </div>
       <div class="header__user-panel">
@@ -26,13 +26,17 @@
         <router-link to="/cart" class="__user-panel__item">
           <img src="@/assets/svg/basket.svg" alt="basket">
         </router-link>
-        <div class="__user-panel__item">
-          <router-link to="/profile"><img src="@/assets/svg/lk.svg" alt="корзина"></router-link>
-          <span @click="showRegistration">Войти</span>
+        <div v-if="userCheck" @click="goToProfile" class="__user-panel__item">
+          <img src="@/assets/svg/lk_in.svg" alt="корзина">
+          <span>Профиль</span>
+        </div>
+        <div v-else @click="showRegistration" class="__user-panel__item">
+          <img src="@/assets/svg/lk.svg" alt="корзина">
+          <span>Войти</span>
         </div>
       </div>
       <div class="header__contacts">
-        <a href="callto:89876543210">
+        <a href="tel:+79876543210">
         <span>
         Обратная связь
       </span>
@@ -60,12 +64,18 @@ export default {
   name: 'Header',
   computed: {
     width() {
-      return this.$store.state.display_width;
+      return this.$store.state.displayWidth;
+    },
+    userCheck() {
+      return Object.keys(this.$store.state.profile.user).length > 0
     }
   },
   methods: {
     showRegistration() {
       this.$store.commit('profile/SET_SHOW_REGISTRATION', true);
+    },
+    goToProfile() {
+      this.$router.push('/profile');
     }
   }
 }

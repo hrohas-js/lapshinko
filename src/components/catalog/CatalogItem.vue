@@ -10,23 +10,23 @@
           {{ item.name }}
         </div>
       </div>
-      <div class="__price __text" :class="{'__price_new':$route.name != 'WishList'}"
-           v-if="width >= 1024 && $route.name != 'WishList' && $route.name != 'Profile'">
+      <div class="__price __text" :class="{'__price_new':$route.name !== 'WishList'}"
+           v-if="width >= 1024 && $route.name !== 'WishList' && $route.name !== 'Profile'">
         {{ item.price }} ₽/кг
       </div>
-      <div class="__wish-price-container __text" :class="{'order-gap':$route.name == 'Profile'}"
-           v-if="width < 1024 || $route.name == 'WishList' ||  $route.name == 'Profile'">
-        <div class="_mini-title __text" v-if="width <= 520 && $route.name == 'WishList' || $route.name == 'Profile'">
+      <div class="__wish-price-container __text" :class="{'order-gap':$route.name === 'Profile'}"
+           v-if="width < 1024 || $route.name === 'WishList' ||  $route.name === 'Profile'">
+        <div class="_mini-title __text" v-if="width <= 520 && $route.name === 'WishList' || $route.name === 'Profile'">
           {{ item.name }}
         </div>
-        <div class="_mini-title __text" v-if="width <= 520 && $route.name != 'WishList'">
+        <div class="_mini-title __text" v-if="width <= 520 && $route.name !== 'WishList'">
           {{ item.name }}
         </div>
         <div class="price-button">
-          <div class="__price" v-if="$route.name !='Profile'">
+          <div class="__price" v-if="$route.name !=='Profile'">
             {{ item.price }} ₽/кг
           </div>
-          <div class="__wish-button" @click="heart = !heart" v-if=" $route.name !='Profile'">
+          <div class="__wish-button" @click="fetchLike" v-if=" $route.name !== 'Profile'">
             <img src="@/assets/svg/wishbutton.svg" alt="добавить в избранное" v-if="!heart">
             <img src="@/assets/svg/activeHeart.svg" alt="добавить в избранное" v-if="heart">
           </div>
@@ -34,7 +34,7 @@
       </div>
     </div>
     <transition name="fade">
-      <div class="food-item _move" v-if="showMove && width >1024 && $route.name !='Profile'">
+      <div class="food-item _move" v-if="showMove && width >1024 && $route.name !== 'Profile'">
         <div class="__choose-container __text">
           <div class="_mini-title">{{ item.name }}</div>
           <div class="__price">
@@ -48,7 +48,7 @@
           {{ this.lifetime }}
         </div>
         <div class="__buttons">
-          <div class="__wish-button" @click="heart = !heart">
+          <div class="__wish-button" @click="fetchLike">
             <img src="@/assets/svg/wishbutton.svg" alt="добавить в избранное" v-if="!heart">
             <img src="@/assets/svg/activeHeart.svg" alt="добавить в избранное" v-if="heart">
           </div>
@@ -56,7 +56,7 @@
             <router-link :to="{name:'GoodsCard',params:{id:item.id}}" class="details __button">
               Детали
             </router-link>
-            <div class="in-basket __button">
+            <div class="in-basket __button" @click="addToCart">
               В&nbsp;Корзину
             </div>
           </div>
@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
   name: 'CatalogItem',
   props: ['item'],
@@ -75,15 +77,14 @@ export default {
     heart: false
   }),
   computed: {
-    width() {
-      return this.$store.state.display_width;
-    },
+    ...mapState({
+      width: 'displayWidth'
+    }),
+    ...mapState('wishlist', {
+      wish: 'wishlist'
+    }),
     attribute() {
-      if (this.item.attributes.length > 1) {
-        return true
-      } else {
-        return false
-      }
+      return this.item.attributes.length > 1;
     },
     properties() {
       if (this.attribute) {
@@ -96,6 +97,27 @@ export default {
       if (this.attribute) {
         return this.item.attributes[2].options[0];
       }
+    }
+  },
+  mounted() {
+    if (this.wish.length > 0) {
+      this.wish.forEach(elem => {
+        if (elem.id === this.item.id) {
+          this.heart = true
+        }
+      })
+    }
+  },
+  methods: {
+    fetchLike() {
+      this.heart = !this.heart
+      this.$store.dispatch('wishlist/updateWishlist', {
+        flag: this.heart,
+        item: this.item
+      })
+    },
+    addToCart() {
+      this.$store.dispatch('cart/addToCart', this.item.id)
     }
   }
 }

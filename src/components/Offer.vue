@@ -21,7 +21,7 @@
               </h2>
             </div>
             <div class="description">
-              Проходим регулярный лаборный контроль качества всей нашей продукции
+              Проходим регулярный лабораторный контроль качества всей нашей продукции
             </div>
           </section>
           <section class="__item grid-end mt">
@@ -82,7 +82,7 @@ export default {
   name: 'Offer',
   computed: {
     width() {
-      return this.$store.state.display_width;
+      return this.$store.state.displayWidth;
     }
   }
 }

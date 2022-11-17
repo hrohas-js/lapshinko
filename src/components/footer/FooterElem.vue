@@ -53,7 +53,7 @@ export default {
   name: 'FooterElem',
   computed: {
     width() {
-      return this.$store.state.display_width
+      return this.$store.state.displayWidth
     }
   }
 }

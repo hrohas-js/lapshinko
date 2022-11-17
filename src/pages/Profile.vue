@@ -7,14 +7,14 @@
     <div class="wrapper _box-gap_bg">
       <div class="panel-container">
         <UserLk></UserLk>
-        <cart-order-total v-if="profileAction == 'basket' && width >= 1025"></cart-order-total>
+        <cart-order-total v-if="profileAction === 'basket' && width >= 1025"></cart-order-total>
       </div>
-      <user v-if="profileAction == 'profile'"></user>
-      <CartBody v-if="profileAction == 'basket'"></CartBody>
-      <orders v-if="profileAction == 'order' && width >= 770"></orders>
+      <user v-if="profileAction === 'profile'"></user>
+      <CartBody v-if="profileAction === 'basket'"></CartBody>
+      <orders v-if="profileAction === 'order' && width >= 770"></orders>
       <cart-order-total v-if="width < 1025"></cart-order-total>
       <router-link to="/catalog" class="go-beak" v-if="width < 1025">Продолжить покупать</router-link>
-      <div class="orders-mobile-container" v-if="profileAction == 'order' && width < 770">
+      <div class="orders-mobile-container" v-if="profileAction === 'order' && width < 770">
         <h1 class="_title">
           заказы
         </h1>
@@ -62,7 +62,7 @@ export default {
       return this.$store.state.profile.userCurrentAction
     },
     width() {
-      return this.$store.state.display_width;
+      return this.$store.state.displayWidth;
     },
     showModal() {
       return this.$store.state.profile.showInfoOrder

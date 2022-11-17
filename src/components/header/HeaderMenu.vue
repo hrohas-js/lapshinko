@@ -15,7 +15,7 @@ export default {
   name: 'HeaderMenu',
   computed: {
     width() {
-      return this.$store.state.display_width
+      return this.$store.state.displayWidth
     },
     categories() {
       return this.$store.getters["category/mainCategories"];

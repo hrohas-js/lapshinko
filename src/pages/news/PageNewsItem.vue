@@ -92,7 +92,7 @@ export default {
   components: {FooterElem, HeaderMenu, Header},
   computed: {
     width() {
-      return this.$store.state.display_width
+      return this.$store.state.displayWidth
     }
   },
   methods:{

@@ -7,31 +7,61 @@
       <router-link to="/" class="header__logo">
         <img src="@/assets/svg/logo.svg" alt="квх лапшино">
       </router-link>
-      <div style="display: none">
+      <div v-if="formOption == 'login'">
         <div class="__login-form">
           <div class="__header">
             <h2>Войдите или зарегистрируйтесь</h2>
           </div>
-          <div class="container __give-me-phone">
-            <input type="text" placeholder="(xxx) xxxxxxx">
-            <div class="country-code">
-              +7
+          <div class="login">
+            <div class="inputs">
+              <div class="input-container">
+                <label for="mail">Email</label>
+                <input
+                    :class="{'input-error':!emailValidation || (emptyLogin && login.email == '')}"
+                    type="email"
+                    id="mail"
+                    placeholder="Email"
+                    v-model="login.email"
+                    @blur="emailValidate(login.email)"
+                >
+              </div>
+              <div class="input-container">
+                <label for="pas">Пароль</label>
+                <input
+                    :class="{'input-error':emptyLogin && login.password == ''}"
+                    type="password"
+                    id="pas"
+                    placeholder="Пароль"
+                    v-model="login.password">
+              </div>
             </div>
-            <div class="_button _button_disable _button_mobile">
-              Получить код
+            <div class="button-box">
+              <span v-if="!emailValidation" class="input-error-text">
+                Вы ввели некорректное значение
+              </span>
+              <span v-if="emptyLogin" class="input-error-text">
+                Заполните все поля
+              </span>
+              <div
+                  class="_button _button_mobile full-width"
+                  :class="{'_button_disable':isEmptyLoginInputs}"
+                  @click="fetchAuth"
+              >
+                Войти
+              </div>
             </div>
-            <div class="__send-code-again">
-              отправить код повтороно
+            <div class="change-form" @click="goToRegistration">
+              Еще не зарегистрировались? Зарегистрируйтесь!
             </div>
           </div>
         </div>
         <div class="__rules">
-          Регистрируясь или авторизуясь на КФХ «Лапшино», вы соглашаетесь с <span>Пользовательское соглашение</span> и
-          <span>Политика
-        обработки персональных данных</span>
+          Регистрируясь или авторизуясь на КФХ «Лапшино», вы соглашаетесь с
+          <span>Пользовательское соглашение</span> и
+          <span>Политика обработки персональных данных</span>
         </div>
       </div>
-      <div>
+      <div v-if="formOption == 'registration'">
         <div class="__header">
           <h2>Укажите сови данные</h2>
         </div>
@@ -39,19 +69,64 @@
           <div class="inputs">
             <div class="input-container">
               <label for="name">Имя</label>
-              <input type="text" id="name" placeholder="Имя">
+              <input
+                  :class="{'input-error':emptyRegistration && registration.name == ''}"
+                  type="text"
+                  id="name"
+                  placeholder="Имя"
+                  v-model="registration.name"
+                  @input="registration.name = registration.name.replace(/[^ a-zа-яё]/ui,'')"
+              >
             </div>
             <div class="input-container">
               <label for="surname">Фамилия</label>
-              <input type="text" id="surname" placeholder="Фамилия">
+              <input
+                  :class="{'input-error':emptyRegistration && registration.surname == ''}"
+                  type="text"
+                  id="surname"
+                  placeholder="Фамилия"
+                  v-model="registration.surname"
+                  @input="registration.surname = registration.surname.replace(/[^ a-zа-яё]/ui,'')"
+              >
             </div>
             <div class="input-container">
               <label for="mail">Email</label>
-              <input type="email" id="mail" placeholder="Email">
+              <input
+                  :class="{'input-error':!emailValidation || (emptyRegistration && registration.email == '')}"
+                  type="email"
+                  id="mail"
+                  placeholder="Email"
+                  v-model="registration.email"
+                  @blur="emailValidate(registration.email)"
+              >
+            </div>
+            <div class="input-container">
+              <label for="pas">Пароль</label>
+              <input
+                  :class="{'input-error':emptyRegistration && registration.password == ''}"
+                  type="password"
+                  id="pas"
+                  placeholder="Пароль"
+                  v-model="registration.password">
             </div>
           </div>
-          <div class="_button _button_disable _button_mobile full-width">
-            Зарегистрироваться
+          <div class="button-box">
+            <span v-if="!emailValidation" class="input-error-text">
+              Вы ввели некорректное значение
+            </span>
+            <span v-if="emptyRegistration" class="input-error-text">
+              Заполните все поля
+            </span>
+            <div
+                class="_button _button_mobile full-width"
+                :class="{'_button_disable':isEmptyRegistrationInputs}"
+                @click="fetchRegistration"
+            >
+              Зарегистрироваться
+            </div>
+          </div>
+          <div class="change-form" @click="goToLogin">
+            У вас уже есть учетная запись? Авторизуйтесь!
           </div>
         </div>
       </div>
@@ -62,9 +137,76 @@
 <script>
 export default {
   name: 'Registration',
+  data: () => ({
+    formOption: 'login',
+    login: {
+      email: '',
+      password: ''
+    },
+    registration: {
+      name: '',
+      surname: '',
+      email: '',
+      password: ''
+    },
+    emailValidation: true,
+    emptyLogin: false,
+    emptyRegistration: false
+  }),
+  computed: {
+    isEmptyLoginInputs() {
+      return (this.login.email === '' || this.login.password === '');
+    },
+    isEmptyRegistrationInputs() {
+      return (this.registration.name === '' || this.registration.surname === '' || this.registration.email === '' || this.registration.password === '');
+    }
+  },
   methods:{
     close(){
       this.$store.commit('profile/SET_SHOW_REGISTRATION',false);
+    },
+    goToRegistration() {
+      this.formOption = 'registration';
+      this.emailValidation = true;
+    },
+    goToLogin() {
+      this.formOption = 'login';
+      this.emailValidation = true;
+    },
+    emailValidate(value) {
+      if (value != '') {
+        if (value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) {
+          this.emailValidation = true;
+        }
+        else {
+          this.emailValidation = false;
+        }
+      }
+    },
+    fetchAuth() {
+      let flag = false;
+      Object.values(this.login).forEach(elem => {
+        if (elem == '') {
+          flag = true;
+        }
+      });
+      this.emptyLogin = flag;
+      if (!this.emptyLogin) {
+        this.$store.dispatch('profile/Login', this.login);
+      }
+    },
+    fetchRegistration() {
+      let flag = false;
+      Object.values(this.registration).forEach(elem => {
+        if (elem == '') {
+          flag = true;
+        }
+      });
+      this.emptyRegistration = flag;
+      if (!this.emptyRegistration) {
+        this.$store.dispatch('profile/Registration', this.registration);
+        this.formOption = 'login';
+      }
     }
   }
 }
@@ -99,31 +241,17 @@ input {
   }
 }
 
-.__give-me-phone {
-  max-width: rem(190);
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-}
-
-.country-code {
-  position: absolute;
-  top: 0;
-  left: 0;
-  border: 1px solid #EAEBEA;
-  padding: rem(14) rem(8);
-}
-
 ._button {
   margin-top: rem(42);
 }
 
-.__send-code-again {
+.change-form {
   text-align: center;
   width: fit-content;
-  margin: rem(72) auto rem(87);
+  margin: rem(20) auto;
   font-size: rem(14);
-  border-bottom: 1px solid #639b42;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .__rules {
@@ -133,6 +261,7 @@ input {
 
   span {
     color: #629C42;
+    cursor: pointer;
   }
 }
 
@@ -153,6 +282,7 @@ input {
 }
 
 .input-container {
+  position: relative;
   margin-top: rem(15);
   label {
     display: block;

@@ -21,7 +21,7 @@ export default {
   }),
   computed: {
     width() {
-      return this.$store.state.display_width
+      return this.$store.state.displayWidth
     },
     first() {
       if (this.product.id == 1 && this.position == 'first') {

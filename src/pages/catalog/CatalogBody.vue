@@ -78,7 +78,7 @@ export default {
   components: {CatalogItem, FilterOptions, Sorting, SubFilter, Filter, FooterElem, HeaderMenu, Header},
   computed: {
     width() {
-      return this.$store.state.display_width
+      return this.$store.state.displayWidth
     },
     catalog() {
       if (this.$route.params.categoryId == 'all') {

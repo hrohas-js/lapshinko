@@ -29,14 +29,14 @@ export const Category = {
     getters: {
         mainCategories(state) {
             return [...state.categories].filter(elem => {
-                return elem.parent == 0;
+                return elem.parent === 0;
             });
         },
     },
     mutations: {
         SET_CATEGORIES(state, category) {
             state.categories = category.filter(elem => {
-                return elem.name != 'Misc';
+                return elem.name !== 'Misc';
             });
             console.log(category);
         },

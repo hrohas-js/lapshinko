@@ -36,7 +36,7 @@ export default {
   components: { FooterElem, NewsPreview, AboutUsBanner, Catalog, Categories, Offer, HeaderMenu, Header},
   computed: {
     width() {
-      return this.$store.state.display_width;
+      return this.$store.state.displayWidth;
     }
   }
 }

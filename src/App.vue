@@ -1,24 +1,38 @@
 <template>
   <div ref="main" class="app">
+    <status-box/>
     <router-view/>
     <Registration v-if="showRegistration"></Registration>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Header from "@/components/header/Header";
 import Registration from "@/components/modal/Registatration";
+import StatusBox from "@/components/UI/StatusBox";
+
 export default {
   name: 'App',
-  components: {Header,Registration},
+  components: {Header,Registration,StatusBox},
   computed:{
-    showRegistration(){
-      return this.$store.state.profile.showRegistration
-    }
+    ...mapState('profile', {
+      showRegistration: 'showRegistration'
+    })
   },
   created() {
     this.$store.commit('SET_AXIOS_INSTANCE');
-    this.$store.dispatch('FetchAuthToken');
+    if (sessionStorage.getItem('jwt') != null) {
+      this.$store.commit('SET_JWT', sessionStorage.getItem('jwt'));
+      this.$store.dispatch('catalog/FetchCatalog');
+      this.$store.dispatch('category/FetchCategories');
+    } else {
+      this.$store.dispatch('FetchAuthToken', {
+        username: 'admin',
+        password: 'rus256303'
+      });
+    }
+    this.$store.dispatch('cart/setCart')
   },
   mounted() {
     this.$store.commit('SET_DISPLAY_WIDTH', this.$refs.main.getBoundingClientRect().width);
@@ -103,6 +117,25 @@ h1, h2, h3, h4, h5 {
   margin-top: rem(40);
 }
 
+.input-error {
+  border: 1px solid #CC4700 !important;
+}
+
+.button-box {
+  position: relative;
+}
+
+.input-error-text {
+  position: absolute;
+  display: block;
+  width: 100%;
+  text-align: center;
+  left: 0;
+  top: rem(-20);
+  color: #CC4700 !important;
+  font-size: 0.75rem !important;
+}
+
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -136,7 +169,7 @@ h1, h2, h3, h4, h5 {
   background-color: #629C42 !important;
   border-radius: 100%;
 }
-.slider-handle, slider-handle:focus{
+.slider-handle, .slider-handle:focus{
   box-shadow: none !important;
 }
 .slider-tooltip{
@@ -156,7 +189,7 @@ h1, h2, h3, h4, h5 {
 }
 
 ._title {
-  font-family: 'Aqum2';
+  font-family: 'Aqum2', sans-serif;
   font-weight: 900;
   font-size: rem(32);
   line-height: rem(40);
@@ -173,7 +206,7 @@ h1, h2, h3, h4, h5 {
 
 
 ._sub-title {
-  font-family: 'Aqum2';
+  font-family: 'Aqum2', sans-serif;
   font-weight: 900;
   font-size: rem(18);
   line-height: rem(23);
@@ -187,7 +220,7 @@ h1, h2, h3, h4, h5 {
 }
 
 ._link {
-  font-family: 'Mulish';
+  font-family: 'Mulish', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: rem(14);
@@ -200,7 +233,7 @@ h1, h2, h3, h4, h5 {
 
 ._button {
   background: radial-gradient(146.15% 470.67% at 52.25% 118.27%, rgba(3, 102, 52, 0.2) 0%, rgba(3, 102, 52, 0.2) 100%), linear-gradient(81.93deg, #629C42 0.16%, #BFE82A 113.53%);
-  box-shadow: 0px 2px 2px 0px rgb(147 187 0 / 60%), 0px 19px 22px -5px rgb(3 102 52 / 53%), inset 0px 0px 8px rgb(255 255 255 / 37%);
+  box-shadow: 0 2px 2px 0 rgb(147 187 0 / 60%), 0 19px 22px -5px rgb(3 102 52 / 53%), inset 0px 0px 8px rgb(255 255 255 / 37%);
   color: #F9F9F9;
   display: flex;
   justify-content: center;
@@ -217,7 +250,7 @@ h1, h2, h3, h4, h5 {
 
 ._button_disable {
   filter: grayscale(100%);
-  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  box-shadow: 0 5px 12px rgba(16, 20, 15, 0.12);
   mix-blend-mode: luminosity;
   color: #FFFFFF;
 }

@@ -49,8 +49,9 @@
           </div>
         </div>
         <div class="goods__add-to-cart">
-          <div class="wishButton">
-            <img src="@/assets/svg/wishbutton.svg" alt="В избранное">
+          <div class="wish-button" @click="fetchLike">
+            <img src="@/assets/svg/wishbutton.svg" alt="добавить в избранное" v-if="!heart">
+            <img src="@/assets/svg/activeHeart.svg" alt="добавить в избранное" v-if="heart">
             <span>
                 В избранное
               </span>
@@ -133,8 +134,9 @@
             <img src="@/assets/svg/galleryArrow.svg" alt="переключить картинку" class="before">
             <span>назад в каталог</span>
           </router-link>
-          <div class="wishButton">
-            <img src="@/assets/svg/wishbutton.svg" alt="В избранное">
+          <div class="wish-button" @click="fetchLike">
+            <img src="@/assets/svg/wishbutton.svg" alt="добавить в избранное" v-if="!heart">
+            <img src="@/assets/svg/activeHeart.svg" alt="добавить в избранное" v-if="heart">
             <span>
                 В избранное
               </span>
@@ -252,6 +254,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import Header from "@/components/header/Header";
 import HeaderMenu from "@/components/header/HeaderMenu";
 import Catalog from "@/components/catalog/Catalog";
@@ -263,7 +266,8 @@ export default {
     sliderMain: null,
     sliderSub: null,
     showDescription: 'desc',
-    objFlag: false
+    objFlag: false,
+    heart: false
   }),
   created() {
     this.sliderMain = this.$store.state.product.sliderMain
@@ -276,9 +280,12 @@ export default {
     Header
   },
   computed: {
-    width() {
-      return this.$store.state.display_width;
-    },
+    ...mapState({
+      width: 'displayWidth'
+    }),
+    ...mapState('wishlist', {
+      wish: 'wishlist'
+    }),
     product() {
       let product = {};
       [...this.$store.state.catalog.catalog].map(elem => {
@@ -303,6 +310,15 @@ export default {
       }
     }
   },
+  mounted() {
+    if (this.wish.length > 0) {
+      this.wish.forEach(elem => {
+        if (elem.id === this.product.id) {
+          this.heart = true
+        }
+      })
+    }
+  },
   methods: {
     showNextImg() {
       let temp = this.sliderSub[0];
@@ -315,6 +331,13 @@ export default {
       this.sliderSub = this.sliderSub.slice(0, this.sliderSub.length - 1);
       this.sliderSub.unshift(this.sliderMain)
       this.sliderMain = temp;
+    },
+    fetchLike() {
+      this.heart = !this.heart
+      this.$store.dispatch('wishlist/updateWishlist', {
+        flag: this.heart,
+        item: this.product
+      })
     }
   }
 }
@@ -434,11 +457,12 @@ export default {
   justify-content: flex-end;
 }
 
-.wishButton {
+.wish-button {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   margin-bottom: rem(32);
+  cursor: pointer;
 }
 
 .goods__add-to-cart__table {
@@ -585,7 +609,7 @@ export default {
       font-size: rem(12);
     }
   }
-  .wishButton {
+  .wish-button {
     margin: 0;
     font-size: rem(12);
     color: #585858;

@@ -35,7 +35,7 @@ export default {
   components: {NewsItem, FooterElem, HeaderMenu, Header},
   computed:{
     width(){
-      return this.$store.state.display_width
+      return this.$store.state.displayWidth
     }
   }
 }

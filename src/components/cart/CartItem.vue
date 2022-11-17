@@ -5,8 +5,7 @@
     </div>
     <div class="cart-item__content" :class="{row:$route.name == 'Cart' && width >=770}">
       <div>
-        <div class="_mini-title">Сало соленое по домашнему</div>
-        <div class="weight">1кг</div>
+        <div class="_mini-title">{{ item.name }}</div>
       </div>
       <div class="controls-summary">
         <div class="controls">
@@ -31,12 +30,22 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: 'CartItem',
-  computed: {
-    width() {
-      return this.$store.state.display_width;
+  props: {
+    item: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
+  },
+  computed: {
+    ...mapState({
+      width: 'displayWidth'
+    })
   }
 }
 </script>

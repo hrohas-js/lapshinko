@@ -22,7 +22,7 @@ export default {
   name: 'AboutUsBanner',
   computed:{
     width(){
-      return this.$store.state.display_width
+      return this.$store.state.displayWidth
     }
   }
 }
