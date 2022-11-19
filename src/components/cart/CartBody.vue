@@ -1,14 +1,30 @@
 <template>
   <div class="cart-body">
     <div class="cart-header">
-      <h1 class="_title">корзина</h1>
-      <span v-if="$route.name === 'Cart'">Минимальная сумма заказа 1 000 ₽</span>
+      <h1 class="_title">
+        корзина
+      </h1>
+      <span v-if="$route.name === 'Cart'">
+        Минимальная сумма заказа {{ min }} ₽
+      </span>
     </div>
-    <div v-if="cart.length > 0" class="cart-list">
-      <CartItem v-for="item in cart" :key="item.id" :item="item"></CartItem>
+    <div v-if="length > 0" class="cart-list">
+      <CartItem
+          v-for="item in cartList"
+          :key="item.product_id"
+          :item="item"
+      />
     </div>
-    <h2 v-else class="_sub-title">корзина пуста</h2>
-    <router-link to="/checkout" class="checkout _button" v-if="width >=1025 && $route.name !== 'Cart' && cart.length > 0">Перейти к оформлению</router-link>
+    <h2 v-else class="_sub-title">
+      корзина пуста
+    </h2>
+    <router-link
+        to="/checkout"
+        class="checkout _button"
+        v-if="width >= 1025 && $route.name !== 'Cart' && length > 0"
+    >
+      Перейти к оформлению
+    </router-link>
   </div>
 </template>
 
@@ -23,8 +39,12 @@ export default {
     ...mapState({
       width: 'displayWidth'
     }),
+    ...mapState('cart', {
+      min: 'minCost',
+      cartList: 'cart'
+    }),
     ...mapGetters('cart', {
-      cart: 'cartList'
+      length: 'cartLength'
     })
   }
 }

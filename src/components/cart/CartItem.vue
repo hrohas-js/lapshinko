@@ -9,22 +9,22 @@
       </div>
       <div class="controls-summary">
         <div class="controls">
-          <div class="controls__button">
+          <div class="controls__button" @click="minusCart">
             <img src="@/assets/svg/minus.svg" alt="minus">
           </div>
           <div class="controls__input">
-            <input type="number">
+            <input type="number" :value="item.quantity" readonly>
           </div>
-          <div class="controls__button">
+          <div class="controls__button" @click="plusCart">
             <img src="@/assets/svg/plus.svg" alt="plus">
           </div>
         </div>
-        <div class="summary _sub-title" v-if="width > 768">1000 ₽</div>
+        <div class="summary _sub-title" v-if="width > 768">{{ totalPrice }} ₽</div>
         <div class="delete" @click="deleteFromCart">
           <img src="@/assets/svg/delete.svg" alt="delete">
         </div>
       </div>
-      <div class="summary _sub-title" v-if="width <= 768">1000 ₽</div>
+      <div class="summary _sub-title" v-if="width <= 768">{{ totalPrice }} ₽</div>
     </div>
   </div>
 </template>
@@ -45,12 +45,22 @@ export default {
   computed: {
     ...mapState({
       width: 'displayWidth'
-    })
+    }),
+    totalPrice() {
+      return this.item.price * this.item.quantity
+    }
   },
   methods: {
     deleteFromCart() {
-      console.log()
-      this.$store.dispatch('cart/deleteFromCart', this.item.id)
+      this.$store.dispatch('cart/deleteFromCart', this.item.product_id)
+    },
+    plusCart() {
+      this.$store.dispatch('cart/setPlusQuantity', this.item.product_id)
+    },
+    minusCart() {
+      if (this.item.quantity > 1) {
+        this.$store.dispatch('cart/setMinusQuantity', this.item.product_id)
+      }
     }
   }
 }
@@ -59,7 +69,9 @@ export default {
 <style lang="scss" scoped>
 .cart-item {
   display: flex;
+  justify-content: space-between;
   max-height: rem(147);
+  margin-bottom: rem(10);
 }
 
 .cart-item__image {
@@ -74,6 +86,7 @@ export default {
 
 .cart-item__content {
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: space-between;
   padding: rem(18) rem(30);
@@ -95,6 +108,7 @@ export default {
 .controls {
   display: flex;
   gap: rem(12);
+  user-select: none;
 }
 
 .controls__button {

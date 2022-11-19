@@ -83,14 +83,20 @@ export const Profile = {
         }
     },
     actions: {
-        async getCurrentUser({rootState, commit}, id) {
-            const response = await rootState.axiosInstance.get('wp/v2/users/' + id,{
+        async getCurrentUser({rootState, commit, dispatch}, id) {
+            const response = await rootState.axiosInstance.get('wp/v2/users/' + id, {
                 headers: {
                     Authorization: `Bearer ${rootState.jwt}`,
                 }
             })
             commit('SET_USER', response.data);
             sessionStorage.setItem('user',JSON.stringify(response.data));
+            if (rootState.cart.length > 0 && localStorage.getItem('cart_' + response.data.name) === null) {
+                sessionStorage.removeItem('cart')
+                localStorage.setItem('cart_' + response.data.name, JSON.stringify(rootState.cart))
+            } else if (localStorage.getItem('cart_' + response.data.name) !== null) {
+                dispatch('cart/setCart', null, {root: true})
+            }
         },
         async Registration({rootState, commit}, registration) {
             const username = registration.email.split('@')[0];
@@ -112,6 +118,9 @@ export const Profile = {
             })
             if (response.status === 201) {
                 commit('SET_STATUS_TEXT', 'Регистрация прошла успешно', {root:true});
+                commit('SHOWED_STATUS', null, {root:true});
+            } else {
+                commit('SET_STATUS_TEXT', 'Извините, аккаунт с таким адресом уже существует', {root:true});
                 commit('SHOWED_STATUS', null, {root:true});
             }
         },
@@ -144,7 +153,6 @@ export const Profile = {
                 }
             })
             commit('SET_USER', response.data);
-            console.log(state.user);
             sessionStorage.setItem('user',JSON.stringify(response.data));
         },
         async uploadPhoto({rootState, dispatch}, photo) {

@@ -66,6 +66,7 @@ export default {
         username: 'admin',
         password: 'rus256303'
       });
+      this.$store.commit('cart/SET_CART', [])
     }
   }
 }

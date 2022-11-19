@@ -117,7 +117,12 @@ export default {
       })
     },
     addToCart() {
-      this.$store.dispatch('cart/addToCart', this.item.id)
+      this.$store.dispatch('cart/addToCart', {
+        product_id: this.item.id,
+        quantity: 1,
+        name: this.item.name,
+        price: parseInt(this.item.price)
+      })
     }
   }
 }

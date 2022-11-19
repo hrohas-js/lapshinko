@@ -8,7 +8,7 @@
       <div class="cart-item-container">
         <cart-body></cart-body>
       </div>
-      <div class="cart-order">
+      <div class="cart-order" v-if="length > 0">
         <cart-order-total></cart-order-total>
       </div>
     </div>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import Header from "@/components/header/Header";
 import HeaderMenu from "@/components/header/HeaderMenu";
 import FooterElem from "@/components/footer/FooterElem";
@@ -34,9 +35,9 @@ export default {
     HeaderMenu, Header
   },
   computed: {
-    width() {
-      return this.$store.state.displayWidth;
-    }
+    ...mapGetters('cart', {
+      length: 'cartLength'
+    })
   }
 }
 </script>

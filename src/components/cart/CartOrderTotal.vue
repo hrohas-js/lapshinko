@@ -1,23 +1,23 @@
 <template>
-  <div :class="{'cart-order-total-container':width >=1025,'cart-order-total-container-mobile':width < 1025}">
-    <div class="__header" v-if="orderCount >= mimCount">
+  <div :class="{'cart-order-total-container':width >= 1025,'cart-order-total-container-mobile':width < 1025}">
+    <div v-if="total >= min" class="__header">
       <span class="__info">
-           Минимальная сумма достигнута
+        Минимальная сумма достигнута
       </span>
       <img src="@/assets/svg/ok.svg" alt="минимальная сумма достигнута">
     </div>
-    <div class="__header">
-      <span class="__info" v-if="orderCount < mimCount">
-           Минимальная сумма не достигнута
+    <div v-else class="__header">
+      <span class="__info">
+        Минимальная сумма не достигнута
       </span>
     </div>
     <div class="__progress-bar-container">
       <div class="__progress-bar">
-        <div class="__progress-bar__well-done" v-if="orderCount >= mimCount"></div>
-        <div class="__progress-bar__not-enough" v-if="orderCount < mimCount" :style="{width:progressBar + '%'}"></div>
+        <div v-if="total >= min" class="__progress-bar__well-done"></div>
+        <div v-else class="__progress-bar__not-enough" :style="{width:progressBar + '%'}"></div>
       </div>
       <span class="text">
-        Доставка бесплатная при заказе от 1 000&nbsp;₽
+        Доставка бесплатная при заказе от {{ free }}&nbsp;₽
       </span>
     </div>
     <div class="__total-count">
@@ -25,31 +25,57 @@
         <div class="__info">
           Общая стоимость
         </div>
-        <div class="__count _sub-title">
-          2 160,00 ₽
+        <div v-if="total < free" class="__count _sub-title">
+          {{ total + deliveryPrice }} ₽
+        </div>
+        <div v-else class="__count _sub-title">
+          {{ total }} ₽
         </div>
       </div>
-      <span class="text">*доставка бесплатная</span>
+      <span v-if="total >= free" class="text">
+        *доставка бесплатная
+      </span>
+      <span v-else class="text">
+        *в сумму заказа включена стоимость доставки {{ deliveryPrice }} ₽
+      </span>
     </div>
-    <router-link to="/checkout" class="checkout _button" v-if="width < 1025 || width >=1025 && $route.name =='Cart'">Перейти к оформлению</router-link>
-    <router-link to="/catalog" class="go-back" v-if="$route.name == 'Cart'">Продолжить покупать</router-link>
+    <router-link
+        to="/checkout"
+        v-if="width < 1025 || width >=1025 && $route.name === 'Cart'"
+        class="checkout _button"
+    >
+      Перейти к оформлению
+    </router-link>
+    <router-link
+        to="/catalog"
+        v-if="$route.name === 'Cart'"
+        class="go-back"
+    >
+      Продолжить покупать
+    </router-link>
   </div>
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
+
 export default {
   name: 'CartOrderTotal',
-  data: () => ({
-    orderCount: 2160,
-    mimCount: 1000,
-  }),
   computed: {
-    width() {
-      return this.$store.state.displayWidth;
-    },
+    ...mapState({
+      width: 'displayWidth'
+    }),
+    ...mapState('cart', {
+      min: 'minCost',
+      free: 'freeDeliveryCostCart',
+      deliveryPrice: 'deliveryCost'
+    }),
+    ...mapGetters('cart', {
+      total: 'cartTotal'
+    }),
     progressBar() {
-      let onePercent = this.mimCount / 100;
-      return Math.round(this.orderCount / onePercent);
+      let onePercent = this.min / 100;
+      return Math.round(this.total / onePercent);
     }
   }
 }
