@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <Header></Header>
-    <header-menu></header-menu>
-  </header>
   <main>
     <div class="page-banner">
       <div class="wrapper section-title _section-banner">
@@ -19,20 +15,14 @@
         загрузить еще 4
     </div>
   </main>
-  <footer>
-    <footer-elem></footer-elem>
-  </footer>
 </template>
 
 <script>
-import Header from "@/components/header/Header";
-import HeaderMenu from "@/components/header/HeaderMenu";
-import FooterElem from "@/components/footer/FooterElem";
 import NewsItem from "@/components/news/NewsItem";
 
 export default {
   name: 'News',
-  components: {NewsItem, FooterElem, HeaderMenu, Header},
+  components: { NewsItem },
   computed:{
     width(){
       return this.$store.state.displayWidth

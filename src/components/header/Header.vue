@@ -1,5 +1,5 @@
 <template>
-  <div class="header" v-if="width > 769">
+  <div v-if="width > 769" class="header">
     <div class="wrapper header__container">
       <router-link to="/" class="header__logo">
         <img src="@/assets/svg/logo.svg" alt="квх лапшино">
@@ -11,7 +11,7 @@
         <div class="__menu__item">
           <span>Доставка</span>
         </div>
-        <router-link to="/news" class="__menu__item" :class="{active:$route.name == 'News'}">
+        <router-link to="/news" class="__menu__item" :class="{active:$route.name === 'News'}">
           <span>Блог</span>
         </router-link>
       </div>
@@ -25,6 +25,9 @@
         </router-link>
         <router-link to="/cart" class="__user-panel__item">
           <img src="@/assets/svg/basket.svg" alt="basket">
+          <div v-if="length > 0" class="count">
+            {{ length }}
+          </div>
         </router-link>
         <div v-if="userCheck" @click="goToProfile" class="__user-panel__item">
           <img src="@/assets/svg/lk_in.svg" alt="корзина">
@@ -44,7 +47,7 @@
       </div>
     </div>
   </div>
-  <header class="header__container" v-else>
+  <div v-else class="header__container">
     <router-link to="/" class="header__logo">
       <img src="@/assets/svg/logoMob.svg" alt="квх лапшино">
     </router-link>
@@ -52,20 +55,31 @@
       <span>КФХ Лапшино</span>
     </div>
     <div class="header__user-panel">
-      <img src="@/assets/svg/basket.svg" alt="basket">
-      <img src="@/assets/svg/burgerMenu.svg" alt="menu">
+      <div class="__user-panel__item">
+        <img src="@/assets/svg/basket.svg" alt="basket">
+        <div v-if="length > 0" class="count">
+          {{ length }}
+        </div>
+      </div>
+      <div class="__user-panel__item">
+        <img src="@/assets/svg/burgerMenu.svg" alt="menu">
+      </div>
     </div>
-  </header>
+  </div>
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: 'Header',
   computed: {
-    width() {
-      return this.$store.state.displayWidth;
-    },
+    ...mapState({
+      width: 'displayWidth'
+    }),
+    ...mapGetters('cart', {
+      length: 'cartLength'
+    }),
     userCheck() {
       return Object.keys(this.$store.state.profile.user).length > 0
     }
@@ -90,12 +104,13 @@ span {
 
 .header {
   border-bottom: 1px solid #C0C0C0;
-  box-shadow: 0px 2px 6px rgba(21, 27, 19, 0.08);
+  box-shadow: 0 2px 6px rgba(21, 27, 19, 0.08);
 }
 
 .header__container {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .header__logo {
@@ -142,7 +157,7 @@ span {
   input {
     width: rem(330);
     height: rem(38);
-    padding: 0px 16px;
+    padding: 0 rem(16);
     border: 1px solid #C0C0C0;
     background: #F9F9F9;
     color: #585858;
@@ -159,6 +174,7 @@ span {
   display: flex;
   align-items: center;
   gap: rem(8);
+  position: relative;
 }
 
 .header__contacts {
@@ -174,6 +190,22 @@ span {
       font-size: rem(16);
     }
   }
+}
+
+.count {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: rem(15);
+  height: rem(15);
+  border-radius: 50%;
+  text-align: center;
+  background: #629C42;
+  color: #FFFFFF;
+  font-size: rem(10);
+  position: absolute;
+  top: rem(-6);
+  right: rem(-6);
 }
 
 @media (max-width: em(1250, 16)) and (min-width: em(768, 16)) {

@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <Header></Header>
-    <header-menu></header-menu>
-  </header>
   <main>
     <div class="page-banner">
       <div class="wrapper section-title _section-banner">
@@ -13,30 +9,23 @@
     </div>
     <div class="_box-gap_sm wrapper">
       <div v-if="list.length > 0" class="wish-list-container">
-        <catalog-item v-for="item in list" :key="item.id" :item="item"></catalog-item>
+        <catalog-item v-for="item in list" :key="item.id" :item="item" />
       </div>
-      <h2 v-else class="_title empty">вы еще не добавили ни одного товара</h2>
+      <h2 v-else class="_title empty">
+        вы еще не добавили ни одного товара
+      </h2>
     </div>
   </main>
-  <footer>
-    <footer-elem></footer-elem>
-  </footer>
-
 </template>
 
 <script>
 import {mapState} from 'vuex';
-import Header from "@/components/header/Header";
-import HeaderMenu from "@/components/header/HeaderMenu";
-import FooterElem from "@/components/footer/FooterElem";
 import CatalogItem from "@/components/catalog/CatalogItem";
 
 export default {
   name: 'WishList',
   components: {
-    CatalogItem,
-    FooterElem,
-    HeaderMenu, Header
+    CatalogItem
   },
   computed: {
     ...mapState({

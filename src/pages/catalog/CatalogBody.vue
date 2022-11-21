@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <Header></Header>
-    <header-menu></header-menu>
-  </header>
   <main>
     <div class="wrapper">
       <div class="_box-gap_bg">
@@ -50,22 +46,14 @@
       </div>
     </div>
   </main>
-  <footer>
-    <footer-elem></footer-elem>
-  </footer>
 </template>
 
 <script>
-
-import Header from "@/components/header/Header";
-import HeaderMenu from "@/components/header/HeaderMenu";
-import FooterElem from "@/components/footer/FooterElem";
 import Filter from "@/components/filters/Filter";
 import SubFilter from "@/components/filters/SubFilter";
 import Sorting from "@/components/filters/Sorting";
 import FilterOptions from "@/components/filters/FilterOptions";
 import CatalogItem from "@/components/catalog/CatalogItem";
-
 
 export default {
   name: 'CatalogBody',
@@ -75,21 +63,21 @@ export default {
     max: '',
     paginationCount: 9
   }),
-  components: {CatalogItem, FilterOptions, Sorting, SubFilter, Filter, FooterElem, HeaderMenu, Header},
+  components: { CatalogItem, FilterOptions, Sorting, SubFilter, Filter },
   computed: {
     width() {
       return this.$store.state.displayWidth
     },
     catalog() {
-      if (this.$route.params.categoryId == 'all') {
+      if (this.$route.params.categoryId === 'all') {
         return this.$store.state.catalog.catalog;
       } else {
         let catalog = [];
         [...this.$store.state.catalog.catalog].forEach(elem => {
           elem.categories.forEach(item => {
-            if (item.id == this.$route.params.categoryId && this.$route.params.subcategoryId == 'all') {
+            if (item.id === this.$route.params.categoryId && this.$route.params.subcategoryId === 'all') {
               catalog.push(elem)
-            } else if (item.id == this.$route.params.subcategoryId) {
+            } else if (item.id === this.$route.params.subcategoryId) {
               catalog.push(elem)
             }
           });
@@ -98,16 +86,16 @@ export default {
       }
     },
     subCategories() {
-      if (this.$route.params.categoryId == 'all') {
+      if (this.$route.params.categoryId === 'all') {
         return []
       } else {
         return [...this.$store.state.category.categories].filter(elem => {
-          return elem.parent == this.$route.params.categoryId;
+          return elem.parent === this.$route.params.categoryId;
         })
       }
     },
     sortCatalog() {
-      if (this.$store.state.catalogSettings.sortParams == '') {
+      if (this.$store.state.catalogSettings.sortParams === '') {
         return this.catalog;
       } else {
         switch (this.$store.state.catalogSettings.sortParams) {
@@ -161,11 +149,7 @@ export default {
       return this.priceFilterCatalog.slice(0, this.paginationCount);
     },
     flagRender() {
-      if (this.priceFilterCatalog.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return this.priceFilterCatalog.length > 0;
     },
   },
   methods: {

@@ -1,42 +1,32 @@
 <template>
-  <header>
-    <Header></Header>
-    <header-menu></header-menu>
-  </header>
   <main>
     <div class="wrapper _box-gap_bg">
       <div class="panel-container">
-        <UserLk></UserLk>
-        <cart-order-total v-if="profileAction === 'basket' && width >= 1025"></cart-order-total>
+        <UserLk />
+        <cart-order-total v-if="profileAction === 'basket' && width >= 1025" />
       </div>
-      <user v-if="profileAction === 'profile'"></user>
-      <CartBody v-if="profileAction === 'basket'"></CartBody>
-      <orders v-if="profileAction === 'order' && width >= 770"></orders>
-      <cart-order-total v-if="width < 1025"></cart-order-total>
+      <user v-if="profileAction === 'profile'" />
+      <CartBody v-if="profileAction === 'basket'" />
+      <orders v-if="profileAction === 'order' && width >= 770" />
+      <cart-order-total v-if="width < 1025" />
       <router-link to="/catalog" class="go-beak" v-if="width < 1025">Продолжить покупать</router-link>
       <div class="orders-mobile-container" v-if="profileAction === 'order' && width < 770">
         <h1 class="_title">
           заказы
         </h1>
         <div class="__elem">
-          <orders-mobile v-for="order in $store.state.profile.ordersMobile" :order="order" :key="order.id"></orders-mobile>
+          <orders-mobile v-for="order in $store.state.profile.ordersMobile" :order="order" :key="order.id" />
         </div>
       </div>
 
     </div>
   </main>
-  <footer>
-    <footer-elem></footer-elem>
-  </footer>
   <transition name="fade">
-    <OrderModal v-if="showModal"></OrderModal>
+    <OrderModal v-if="showModal" />
   </transition>
 </template>
 
 <script>
-import Header from "@/components/header/Header";
-import HeaderMenu from "@/components/header/HeaderMenu";
-import FooterElem from "@/components/footer/FooterElem";
 import UserLk from "@/components/profile/UserLk";
 import User from "@/components/profile/User";
 import Orders from "@/components/profile/Orders";
@@ -54,8 +44,7 @@ export default {
     OrdersMobile,
     Orders,
     User,
-    UserLk, FooterElem,
-    HeaderMenu, Header
+    UserLk
   },
   computed: {
     profileAction() {
@@ -96,8 +85,7 @@ export default {
   margin-bottom: rem(21);
 }
 .go-back{
-  margin: 0 auto;
-  margin-top: rem(32);
+  margin: rem(32) auto 0;
   border-bottom: 1px solid #D9AC94;
 }
 @media (max-width: em(1920, 16)) and (min-width: em(1025, 16)) {

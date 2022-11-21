@@ -1,20 +1,31 @@
 <template>
   <div ref="main" class="app">
-    <status-box/>
-    <router-view/>
-    <Registration v-if="showRegistration"></Registration>
+    <status-box />
+    <Registration v-if="showRegistration" />
+    <header>
+      <Header />
+      <header-menu />
+      <Burger />
+    </header>
+    <router-view />
+    <footer>
+      <footer-elem />
+    </footer>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import Header from "@/components/header/Header";
+import HeaderMenu from "@/components/header/HeaderMenu";
 import Registration from "@/components/modal/Registatration";
 import StatusBox from "@/components/UI/StatusBox";
+import FooterElem from "@/components/footer/FooterElem";
+import Burger from "@/components/header/Burger";
 
 export default {
   name: 'App',
-  components: {Header,Registration,StatusBox},
+  components: {Burger, Header, HeaderMenu, Registration, StatusBox, FooterElem},
   computed:{
     ...mapState('profile', {
       showRegistration: 'showRegistration'
@@ -57,6 +68,10 @@ export default {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+header {
+  position: relative;
 }
 
 input {

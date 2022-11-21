@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <Header></Header>
-    <header-menu></header-menu>
-  </header>
   <main>
     <div class="wrapper _box-gap_bg">
       <div class="cart-item-container">
@@ -13,17 +9,10 @@
       </div>
     </div>
   </main>
-  <footer>
-    <footer-elem></footer-elem>
-  </footer>
-
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import Header from "@/components/header/Header";
-import HeaderMenu from "@/components/header/HeaderMenu";
-import FooterElem from "@/components/footer/FooterElem";
 import CartOrderTotal from "@/components/cart/CartOrderTotal";
 import CartBody from "@/components/cart/CartBody";
 
@@ -31,8 +20,7 @@ export default {
   name: 'Cart',
   components: {
     CartBody,
-    CartOrderTotal, FooterElem,
-    HeaderMenu, Header
+    CartOrderTotal
   },
   computed: {
     ...mapGetters('cart', {

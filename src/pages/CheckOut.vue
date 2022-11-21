@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <Header></Header>
-    <header-menu></header-menu>
-  </header>
   <main>
     <div class="wrapper">
       <div class="container">
@@ -194,9 +190,6 @@
       </div>
     </div>
   </main>
-  <footer>
-    <footer-elem></footer-elem>
-  </footer>
   <div class="modal" v-if="showThanks">
     <div class="thanks">
       <div class="close" @click="close">
@@ -216,11 +209,6 @@
 </template>
 
 <script>
-
-import Header from "@/components/header/Header";
-import HeaderMenu from "@/components/header/HeaderMenu";
-import FooterElem from "@/components/footer/FooterElem";
-
 export default {
   name: 'CheckOut',
   data: () => ({
@@ -241,11 +229,6 @@ export default {
     },
     showThanks: false
   }),
-  components: {
-    FooterElem,
-    HeaderMenu,
-    Header
-  },
   computed: {
     width() {
       return this.$store.state.displayWidth;

@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <Header></Header>
-    <header-menu></header-menu>
-  </header>
   <main>
     <div class="wrapper">
       <div class="section-header">
@@ -67,7 +63,7 @@
             производство мясных продуктов из собственного сырья.</p>
         </div>
       </section>
-      <div class="go-up" v-if="width<=769" @click="scrolTo()">
+      <div class="go-up" v-if="width<=769" @click="scrollTo()">
         <img src="@/assets/svg/arrowUp.svg" alt="в начало новости">
       </div>
       <div class="button-navigation">
@@ -77,26 +73,18 @@
       </div>
     </div>
   </main>
-  <footer>
-    <footer-elem></footer-elem>
-  </footer>
 </template>
 
 <script>
-import Header from "@/components/header/Header";
-import HeaderMenu from "@/components/header/HeaderMenu";
-import FooterElem from "@/components/footer/FooterElem";
-
 export default {
   name: 'PageNewsItem',
-  components: {FooterElem, HeaderMenu, Header},
   computed: {
     width() {
       return this.$store.state.displayWidth
     }
   },
   methods:{
-    scrolTo(){
+    scrollTo(){
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }

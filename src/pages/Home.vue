@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <Header></Header>
-    <header-menu></header-menu>
-  </header>
   <main>
     <offer></offer>
     <div class="wrapper">
@@ -13,27 +9,20 @@
     <div class="wrapper">
       <news-preview></news-preview>
     </div>
-
   </main>
-  <footer>
-    <footer-elem></footer-elem>
-  </footer>
 </template>
 
 <script>
-import Header from "@/components/header/Header";
-import HeaderMenu from "@/components/header/HeaderMenu";
 import Offer from "@/components/Offer";
 import Categories from "@/components/categories/Categories";
 import Catalog from "@/components/catalog/Catalog";
 import AboutUsBanner from "@/components/AboutUsBanner";
 import NewsPreview from "@/components/news/NewsPreview";
-import FooterElem from "@/components/footer/FooterElem";
 
 
 export default {
   name: 'Home',
-  components: { FooterElem, NewsPreview, AboutUsBanner, Catalog, Categories, Offer, HeaderMenu, Header},
+  components: { NewsPreview, AboutUsBanner, Catalog, Categories, Offer },
   computed: {
     width() {
       return this.$store.state.displayWidth;

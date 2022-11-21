@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <Header></Header>
-    <header-menu></header-menu>
-  </header>
   <main>
     <div class="_box-gap_bg wrapper" v-if="width >= 770">
       <section class="goods">
@@ -248,17 +244,11 @@
       </div>
     </div>
   </main>
-  <footer>
-    <footer-elem></footer-elem>
-  </footer>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import Header from "@/components/header/Header";
-import HeaderMenu from "@/components/header/HeaderMenu";
 import Catalog from "@/components/catalog/Catalog";
-import FooterElem from "@/components/footer/FooterElem";
 
 export default {
   name: 'GoodsCart',
@@ -274,10 +264,7 @@ export default {
     this.sliderSub = [...this.$store.state.product.sliderSub]
   },
   components: {
-    FooterElem,
-    Catalog,
-    HeaderMenu,
-    Header
+    Catalog
   },
   computed: {
     ...mapState({
