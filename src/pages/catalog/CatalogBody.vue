@@ -75,9 +75,9 @@ export default {
         let catalog = [];
         [...this.$store.state.catalog.catalog].forEach(elem => {
           elem.categories.forEach(item => {
-            if (item.id === this.$route.params.categoryId && this.$route.params.subcategoryId === 'all') {
+            if (item.id === parseInt(this.$route.params.categoryId) && this.$route.params.subcategoryId === 'all') {
               catalog.push(elem)
-            } else if (item.id === this.$route.params.subcategoryId) {
+            } else if (item.id === parseInt(this.$route.params.subcategoryId)) {
               catalog.push(elem)
             }
           });
@@ -90,7 +90,7 @@ export default {
         return []
       } else {
         return [...this.$store.state.category.categories].filter(elem => {
-          return elem.parent === this.$route.params.categoryId;
+          return elem.parent === parseInt(this.$route.params.categoryId);
         })
       }
     },

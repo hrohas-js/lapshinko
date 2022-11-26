@@ -1,32 +1,57 @@
 <template>
-  <div class="food-container" @mouseenter="showMove = true" @mouseleave="showMove = false">
-    <div class="food-item" :class="{'food-item_wish':$route.name =='WishList' && width <= 520,
-     'w100':$route.name =='WishList', 'modal__item':$route.name =='Profile'}">
+  <div
+      class="food-container"
+      @click="goToProduct"
+      @mouseenter="showMove = true"
+      @mouseleave="showMove = false">
+    <div
+        class="food-item"
+        :class="{'food-item_wish':$route.name === 'WishList' && width <= 520, 'w100':$route.name === 'WishList', 'modal__item':$route.name === 'Profile'}"
+    >
       <div class="__choose-container">
         <div class="__img">
           <img src="@/assets/png/news/foods.png" alt="новые поступления">
         </div>
-        <div class="_mini-title __text" v-if="width > 520 && $route.name !='WishList ' && $route.name != 'Profile'">
+        <div
+            v-if="width > 520 && $route.name !== 'WishList ' && $route.name !== 'Profile'"
+            class="_mini-title __text"
+        >
           {{ item.name }}
         </div>
       </div>
-      <div class="__price __text" :class="{'__price_new':$route.name !== 'WishList'}"
-           v-if="width >= 1024 && $route.name !== 'WishList' && $route.name !== 'Profile'">
+      <div
+          v-if="width >= 1024 && $route.name !== 'WishList' && $route.name !== 'Profile'"
+          class="__price __text"
+          :class="{'__price_new':$route.name !== 'WishList'}"
+      >
         {{ item.price }} ₽/кг
       </div>
-      <div class="__wish-price-container __text" :class="{'order-gap':$route.name === 'Profile'}"
-           v-if="width < 1024 || $route.name === 'WishList' ||  $route.name === 'Profile'">
-        <div class="_mini-title __text" v-if="width <= 520 && $route.name === 'WishList' || $route.name === 'Profile'">
+      <div
+          v-if="width < 1024 || $route.name === 'WishList' ||  $route.name === 'Profile'"
+          class="__wish-price-container __text"
+          :class="{'order-gap':$route.name === 'Profile'}"
+      >
+        <div
+            v-if="width <= 520 && $route.name === 'WishList' || $route.name === 'Profile'"
+            class="_mini-title __text"
+        >
           {{ item.name }}
         </div>
-        <div class="_mini-title __text" v-if="width <= 520 && $route.name !== 'WishList'">
+        <div
+            v-if="width <= 520 && $route.name !== 'WishList'"
+            class="_mini-title __text"
+        >
           {{ item.name }}
         </div>
         <div class="price-button">
           <div class="__price" v-if="$route.name !=='Profile'">
             {{ item.price }} ₽/кг
           </div>
-          <div class="__wish-button" @click="fetchLike" v-if=" $route.name !== 'Profile'">
+          <div
+              v-if=" $route.name !== 'Profile'"
+              class="__wish-button"
+              @click="fetchLike"
+          >
             <img src="@/assets/svg/wishbutton.svg" alt="добавить в избранное" v-if="!heart">
             <img src="@/assets/svg/activeHeart.svg" alt="добавить в избранное" v-if="heart">
           </div>
@@ -34,7 +59,7 @@
       </div>
     </div>
     <transition name="fade">
-      <div class="food-item _move" v-if="showMove && width >1024 && $route.name !== 'Profile'">
+      <div class="food-item _move" v-if="showMove && width > 1024 && $route.name !== 'Profile'">
         <div class="__choose-container __text">
           <div class="_mini-title">{{ item.name }}</div>
           <div class="__price">
@@ -42,7 +67,7 @@
           </div>
         </div>
         <div class="__description">
-          <span v-if="this.properties != ''">Состав: {{ this.properties }}</span>
+          <span v-if="this.properties !== ''">Состав: {{ this.properties }}</span>
         </div>
         <div class="__shelf-life">
           {{ this.lifetime }}
@@ -67,7 +92,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: 'CatalogItem',
@@ -123,6 +148,11 @@ export default {
         name: this.item.name,
         price: parseInt(this.item.price)
       })
+    },
+    goToProduct() {
+      if (this.width <= 1024) {
+        this.$router.push({name:'GoodsCard',params:{id:this.item.id}})
+      }
     }
   }
 }

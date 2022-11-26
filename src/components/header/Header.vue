@@ -20,7 +20,7 @@
         <img src="@/assets/svg/search.svg" alt="search">
       </div>
       <div class="header__user-panel">
-        <router-link to="/wishList" class="__user-panel__item">
+        <router-link to="/wishlist" class="__user-panel__item">
           <img src="@/assets/svg/wishList.svg" alt="wish list">
         </router-link>
         <router-link to="/cart" class="__user-panel__item">
@@ -61,7 +61,7 @@
           {{ length }}
         </div>
       </div>
-      <div class="__user-panel__item">
+      <div class="__user-panel__item" @click="toggleBurger">
         <img src="@/assets/svg/burgerMenu.svg" alt="menu">
       </div>
     </div>
@@ -90,6 +90,9 @@ export default {
     },
     goToProfile() {
       this.$router.push('/profile');
+    },
+    toggleBurger() {
+      this.$store.commit('SET_SHOW_BURGER');
     }
   }
 }
@@ -175,6 +178,7 @@ span {
   align-items: center;
   gap: rem(8);
   position: relative;
+  user-select: none;
 }
 
 .header__contacts {

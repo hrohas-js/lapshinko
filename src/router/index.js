@@ -22,7 +22,7 @@ const routes = [
         component: Catalog
     },
     {
-        path: '/catalogBody/:categoryId/:subcategoryId',
+        path: '/catalog-body/:categoryId/:subcategoryId',
         name: 'CatalogBody',
         component: CatalogBody
     },
@@ -37,12 +37,12 @@ const routes = [
         component: PageNewsItem
     },
     {
-        path: '/wishList',
+        path: '/wishlist',
         name: 'WishList',
         component: WishList
     },
     {
-        path: '/goodsCard/:id',
+        path: '/goods-card/:id',
         name: 'GoodsCard',
         component: GoodsCard
     },

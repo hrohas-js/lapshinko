@@ -18,7 +18,6 @@ export const Cart = {
     mutations: {
         SET_CART(state, cart) {
             state.cart = cart
-            console.log(state.cart)
         },
         ADD_TO_CART(state, item) {
             state.cart.push(item)
@@ -45,20 +44,20 @@ export const Cart = {
     },
     actions: {
         setCart({rootState, commit}) {
-            if (Object.keys(rootState.profile.user).length > 0 && localStorage.getItem('cart_' + rootState.profile.user.name) != null) {
-                commit('SET_CART', JSON.parse(localStorage.getItem('cart_' + rootState.profile.user.name)))
+            if (Object.keys(rootState.profile.user).length > 0 && rootState.profile.user.meta.cart.length > 0) {
+                commit('SET_CART', rootState.profile.user.meta.cart)
             }
             else if (sessionStorage.getItem('cart') !== null) {
                 commit('SET_CART', JSON.parse(sessionStorage.getItem('cart')))
             }
         },
-        updateCart({state, rootState}) {
-            if (Object.keys(rootState.profile.user).length > 0) {
-                if (state.cart.length > 0) {
-                    localStorage.setItem('cart_' + rootState.profile.user.name, JSON.stringify(state.cart))
-                } else {
-                    localStorage.removeItem('cart_' + rootState.profile.user.name)
-                }
+        updateCart({state, rootState, dispatch}) {
+            if (Object.keys(rootState.profile.user).length > 0 && state.cart.length > 0) {
+                dispatch('profile/updateUser', {
+                    meta: {
+                        cart: state.cart
+                    }
+                }, {root: true})
             }
             else {
                 sessionStorage.setItem('cart', JSON.stringify(state.cart))

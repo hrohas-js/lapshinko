@@ -16,7 +16,8 @@ export default createStore({
         jwt: '',
         displayWidth: 0,
         statusText: '',
-        showedStatus: false
+        showedStatus: false,
+        showBurger: false
     },
     getters: {},
     mutations: {
@@ -40,6 +41,9 @@ export default createStore({
                 state.showedStatus = false;
                 state.statusText = ''
             }, 3000);
+        },
+        SET_SHOW_BURGER(state) {
+            state.showBurger = !state.showBurger;
         }
     },
     actions: {

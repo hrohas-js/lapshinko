@@ -5,7 +5,9 @@
     <header>
       <Header />
       <header-menu />
-      <Burger />
+      <transition name="slide-fade">
+        <Burger v-if="burger" />
+      </transition>
     </header>
     <router-view />
     <footer>
@@ -29,6 +31,9 @@ export default {
   computed:{
     ...mapState('profile', {
       showRegistration: 'showRegistration'
+    }),
+    ...mapState({
+      burger: 'showBurger'
     })
   },
   created() {
@@ -43,14 +48,14 @@ export default {
         password: 'rus256303'
       });
     }
-    this.$store.dispatch('cart/setCart')
   },
   mounted() {
     this.$store.commit('SET_DISPLAY_WIDTH', this.$refs.main.getBoundingClientRect().width);
     window.addEventListener("resize", () => {
       this.$store.commit('SET_DISPLAY_WIDTH', this.$refs.main.getBoundingClientRect().width);
     });
-  },
+    this.$store.dispatch('cart/setCart')
+  }
 }
 </script>
 
@@ -70,6 +75,15 @@ export default {
   padding: 0;
 }
 
+html {
+  font-family: 'Mulish', sans-serif;
+  font-weight: 400;
+  height: 100%;
+  line-height: 20px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
 header {
   position: relative;
 }
@@ -80,24 +94,11 @@ input {
   outline: none;
 }
 
-html {
-  font-family: 'Mulish', sans-serif;
-  font-weight: 400;
-  height: 100%;
-  line-height: 20px;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
 img {
   max-width: 100%;
 }
 
-ul {
-  list-style-type: none;
-}
-
-li {
+ul, li {
   list-style-type: none;
 }
 
@@ -109,6 +110,20 @@ a {
 h1, h2, h3, h4, h5 {
   font-size: unset;
   font-weight: normal;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(-20px);
+  opacity: 0;
 }
 
 .app {

@@ -80,6 +80,7 @@ export const Profile = {
         },
         SET_USER(state, user) {
             state.user = user;
+            console.log(state.user)
         }
     },
     actions: {
