@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="_box-gap_bg wrapper" v-if="width >= 770">
+    <div v-if="width >= 770" class="_box-gap_bg wrapper">
       <section class="goods">
         <div class="slider">
           <img :src="sliderMain.img" alt="продукт">
@@ -11,30 +11,54 @@
             <img src="@/assets/svg/galleryArrow.svg" alt="переключить картинку">
           </div>
         </div>
-        <div class="goods__description" :class="{jcsb:properties == ''}">
-          <h1 class="_title">{{ product.name }}</h1>
-          <div :class="{compound:properties != ''}" v-if="properties != ''">
-            <h2>Состав:</h2>
-            <span>{{ properties }}</span>
+        <div class="goods__description" :class="{jcsb:properties === ''}">
+          <h1 class="_title">
+            {{ product.name }}
+          </h1>
+          <div v-if="properties !== ''" :class="{compound:properties !== ''}">
+            <h2>
+              Состав:
+            </h2>
+            <span>
+              {{ properties }}
+            </span>
           </div>
-          <div class="nutritional-value" :class="{compound:properties == ''}">
-            <h2>Пищевая ценность на 100 г:</h2>
+          <div class="nutritional-value" :class="{compound:properties === ''}">
+            <h2>
+              Пищевая ценность на 100 г:
+            </h2>
             <div class="__table">
               <div>
-                <span>Белки</span>
-                <span class="kkal-count">1.4</span>
+                <span>
+                  Белки
+                </span>
+                <span class="kkal-count">
+                  1.4
+                </span>
               </div>
               <div>
-                <span>Жиры</span>
-                <span class="kkal-count">92.8</span>
+                <span>
+                  Жиры
+                </span>
+                <span class="kkal-count">
+                  92.8
+                </span>
               </div>
               <div>
-                <span>Углеводы</span>
-                <span class="kkal-count">0</span>
+                <span>
+                  Углеводы
+                </span>
+                <span class="kkal-count">
+                  0
+                </span>
               </div>
               <div>
-                <span>Ккал</span>
-                <span class="kkal-count">841</span>
+                <span>
+                  Ккал
+                </span>
+                <span class="kkal-count">
+                  841
+                </span>
               </div>
             </div>
           </div>
@@ -56,36 +80,56 @@
             <div class="__go-to-basket">
               <div class="price">
                 <h2>
-                  {{ product.price }} ₽
+                  {{ currentPrice }} ₽
                 </h2>
                 <span>
-                    Цена/ 1 кг
+                    Цена/ {{ weight }}
                   </span>
               </div>
-              <div class="_button _button_mobile">
+              <div class="_button _button_mobile" @click="addToCart">
                 В корзину
               </div>
             </div>
             <div class="__goods-count">
-              <div class="minus __count__elem">
+              <div class="minus __count__elem" @click="quantity > 1 ? quantity-- : quantity = 1">
                 -
               </div>
               <div class="__count__value">
-                <input type="text" class="__count__elem">
+                <input type="text" readonly class="__count__elem" v-model="quantity">
               </div>
-              <div class="plus __count__elem">
+              <div class="plus __count__elem" @click="quantity++">
                 +
+              </div>
+            </div>
+            <div v-if="hasVariations" class="value-select">
+              <div class="value-select__item value-select_body" @click="valueShown = !valueShown">
+                <span>
+                  {{ currentVariationName }}
+                </span>
+                <div class="value-select__arrow" :class="{'__arrow_round':valueShown}">
+                  <img src="@/assets/svg/valueArrow.svg" alt="arrow">
+                </div>
+              </div>
+              <div v-if="valueShown" class="value-select__list">
+                <div
+                    v-for="item in variations"
+                    :key="item.id"
+                    class="value-select__item"
+                    @click="chooseValue(item)"
+                >
+                  {{ item.name }}
+                </div>
               </div>
             </div>
             <div class="delivery">
               <h2>Условия доставки</h2>
               <ul>
                 <li><img src="@/assets/svg/temp.svg" alt="условия доставки"><span>
-                    Минимальная сумма заказа – 1 000 ₽
+                    Минимальная сумма заказа – {{ minCost }} ₽
                   </span></li>
                 <li><img src="@/assets/svg/temp.svg" alt="условия доставки"><span>
-                    Доставка по г. Москва - 500 ₽
-                    Бесплатно от 2 000 ₽
+                    Доставка {{ deliveryCost }} ₽<br>
+                    Бесплатно от {{ freeDelivery }} ₽
                   </span></li>
                 <li><img src="@/assets/svg/temp.svg" alt="условия доставки"><span>
                     Оплата картой/наличными
@@ -103,24 +147,42 @@
       </section>
       <div class="good-info container">
         <div class="good-info__item">
-          <h2 class="_sub-title" @click="showDescription='desc'" :class="{active:showDescription=='desc'}">Описание</h2>
-          <h2 class="_sub-title" @click="showDescription='del'" :class="{active:showDescription=='del'}">Доставка</h2>
-          <h2 class="_sub-title" @click="showDescription='pay'" :class="{active:showDescription=='pay'}">Оплата</h2>
+          <h2
+              class="_sub-title"
+              :class="{active:showDescription === 'desc'}"
+              @click="showDescription='desc'"
+          >
+            Описание
+          </h2>
+          <h2
+              class="_sub-title"
+              :class="{active:showDescription === 'del'}"
+              @click="showDescription='del'"
+          >
+            Доставка
+          </h2>
+          <h2
+              class="_sub-title"
+              :class="{active:showDescription === 'pay'}"
+              @click="showDescription='pay'"
+          >
+            Оплата
+          </h2>
         </div>
       </div>
       <div class="good-description _box-gap_bg">
-        <div class="__description" v-if="showDescription=='desc'">
+        <div class="__description" v-if="showDescription === 'desc'">
           Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.1
         </div>
-        <div class="__description" v-if="showDescription =='del'">
+        <div class="__description" v-if="showDescription === 'del'">
           Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.2
         </div>
-        <div class="__description" v-if="showDescription == 'pay'">
+        <div class="__description" v-if="showDescription === 'pay'">
           Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.3
         </div>
       </div>
       <div class="container">
-        <Catalog title="card"></Catalog>
+        <Catalog title="card"/>
       </div>
     </div>
     <div v-if="width < 770">
@@ -138,7 +200,9 @@
               </span>
           </div>
         </div>
-        <h1 class="_title">Сало солёное по-домашнему</h1>
+        <h1 class="_title">
+          {{ product.name }}
+        </h1>
         <div class="slider">
           <img :src="sliderMain.img" alt="продукт">
           <div class="mini-slider">
@@ -149,7 +213,7 @@
         </div>
         <div class="compound">
           <h2 :class="{'_sub-title':width > 450}">Состав:</h2>
-          <span>сало, соль, перец, чеснок, лавровый лист.</span>
+          <span>{{ properties }}</span>
         </div>
         <div class="nutritional-value">
           <h2>Пищевая ценность на 100 г:</h2>
@@ -174,31 +238,50 @@
         </div>
         <div class="good-info container">
           <div class="good-info__item">
-            <h2 class="_sub-title" @click="showDescription='desc'" :class="{active:showDescription=='desc'}">
-              Описание</h2>
-            <h2 class="_sub-title" @click="showDescription='del'" :class="{active:showDescription=='del'}">Доставка</h2>
-            <h2 class="_sub-title" @click="showDescription='pay'" :class="{active:showDescription=='pay'}">Оплата</h2>
+            <h2
+                class="_sub-title"
+                :class="{active:showDescription === 'desc'}"
+                @click="showDescription='desc'"
+            >
+              Описание
+            </h2>
+            <h2
+                class="_sub-title"
+                :class="{active:showDescription === 'del'}"
+                @click="showDescription='del'"
+            >
+              Доставка
+            </h2>
+            <h2
+                class="_sub-title"
+                :class="{active:showDescription === 'pay'}"
+                @click="showDescription='pay'"
+            >
+              Оплата
+            </h2>
           </div>
         </div>
         <div class="good-description">
-          <div class="__description" v-if="showDescription=='desc'">
+          <div class="__description" v-if="showDescription === 'desc'">
             Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.1
           </div>
-          <div class="__description" v-if="showDescription =='del'">
+          <div class="__description" v-if="showDescription === 'del'">
             Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.2
           </div>
-          <div class="__description" v-if="showDescription == 'pay'">
+          <div class="__description" v-if="showDescription === 'pay'">
             Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.3
           </div>
         </div>
         <div class="__go-to-basket _box-gap_bg">
           <div class="price">
             <h2>
-              420,00 ₽
+              {{ currentPrice }} ₽
             </h2>
-            <span>Цена/ 1 кг</span>
+            <span>
+              Цена/ {{ weight }}
+            </span>
           </div>
-          <div class="_button _button_mobile">
+          <div class="_button _button_mobile" @click="addToCart">
             В корзину
           </div>
         </div>
@@ -207,10 +290,30 @@
             -
           </div>
           <div class="__count__value">
-            <input type="text" class="__count__elem">
+            <input type="text" readonly class="__count__elem" v-model="quantity">
           </div>
           <div class="plus __count__elem">
             +
+          </div>
+        </div>
+        <div v-if="hasVariations" class="value-select">
+          <div class="value-select__item value-select_body" @click="valueShown = !valueShown">
+                <span>
+                  {{ currentVariationName }}
+                </span>
+            <div class="value-select__arrow" :class="{'__arrow_round':valueShown}">
+              <img src="@/assets/svg/valueArrow.svg" alt="arrow">
+            </div>
+          </div>
+          <div v-if="valueShown" class="value-select__list">
+            <div
+                v-for="item in variations"
+                :key="item.id"
+                class="value-select__item"
+                @click="chooseValue(item)"
+            >
+              {{ item.name }}
+            </div>
           </div>
         </div>
         <div class="goods__add-to-cart _box-gap_bg">
@@ -219,11 +322,11 @@
               <h2>Условия доставки</h2>
               <ul>
                 <li><img src="@/assets/svg/temp.svg" alt="условия доставки"><span>
-                    Минимальная сумма заказа – 1 000 ₽
+                    Минимальная сумма заказа – {{ minCost }} ₽
                   </span></li>
                 <li><img src="@/assets/svg/temp.svg" alt="условия доставки"><span>
-                    Доставка по г. Москва - 500 ₽
-                    Бесплатно от 2 000 ₽
+                    Доставка {{ deliveryCost }} ₽<br>
+                    Бесплатно от {{ freeDelivery }} ₽
                   </span></li>
                 <li><img src="@/assets/svg/temp.svg" alt="условия доставки"><span>
                     Оплата картой/наличными
@@ -240,7 +343,7 @@
         </div>
       </div>
       <div class="catalog-container">
-        <Catalog></Catalog>
+        <Catalog/>
       </div>
     </div>
   </main>
@@ -257,37 +360,58 @@ export default {
     sliderSub: null,
     showDescription: 'desc',
     objFlag: false,
-    heart: false
+    heart: false,
+    quantity: 1,
+    valueShown: false,
+    currentPrice: 0,
+    currentVariationID: 0,
+    weight: '',
+    currentVariationName: 'объем',
+    inCart: false
+
   }),
-  created() {
-    this.sliderMain = this.$store.state.product.sliderMain
-    this.sliderSub = [...this.$store.state.product.sliderSub]
-  },
   components: {
     Catalog
   },
   computed: {
     ...mapState({
-      width: 'displayWidth'
+      width: 'displayWidth',
+      burger: 'showBurger'
     }),
     ...mapState('wishlist', {
       wish: 'wishlist'
     }),
+    ...mapState('cart', {
+      minCost: 'minCost',
+      freeDelivery: 'freeDeliveryCostCart',
+      deliveryCost: 'deliveryCost'
+    }),
+    ...mapState('product', {
+      variations: 'variations'
+    }),
     product() {
       let product = {};
       [...this.$store.state.catalog.catalog].map(elem => {
-        if (elem.id == this.$route.params.id) {
+        if (elem.id === parseInt(this.$route.params.id)) {
           product = elem;
           this.objFlag = true;
         }
       });
+      console.log(product)
       return product;
+    },
+    hasVariations() {
+      if (this.objFlag) {
+        return this.product.variations.length > 0
+      } else {
+        return false
+      }
     },
     properties() {
       if (this.objFlag) {
         let props = ''
         this.product.attributes.forEach(elem => {
-          if (elem.id == 1) {
+          if (elem.id === 1) {
             props = elem.options[0];
           }
         })
@@ -297,7 +421,23 @@ export default {
       }
     }
   },
+  watch: {
+    objFlag(newValue) {
+      if (newValue) {
+        this.$store.dispatch('product/FetchVariations', this.product.id)
+        this.currentPrice = parseInt(this.product.price)
+        this.weight = this.product.attributes[this.product.attributes.length - 1].options[0]
+      }
+    }
+  },
+  created() {
+    this.sliderMain = this.$store.state.product.sliderMain
+    this.sliderSub = [...this.$store.state.product.sliderSub]
+  },
   mounted() {
+    if (this.burger) {
+      this.$store.commit('SET_SHOW_BURGER')
+    }
     if (this.wish.length > 0) {
       this.wish.forEach(elem => {
         if (elem.id === this.product.id) {
@@ -321,11 +461,45 @@ export default {
     },
     fetchLike() {
       this.heart = !this.heart
-      this.$store.dispatch('wishlist/updateWishlist', {
-        flag: this.heart,
-        item: this.product
-      })
-    }
+      if (this.heart) {
+        this.$store.dispatch('wishlist/addToWishList', {
+          id: this.product.id,
+          name: this.product.name,
+          price: parseInt(this.product.price)
+        })
+      } else {
+        this.$store.dispatch('wishlist/deleteFromWishList', this.product.id)
+      }
+    },
+    chooseValue(item) {
+      this.valueShown = false
+      this.currentVariationID = item.id
+      this.currentVariationName = item.name
+      this.currentPrice = item.price
+      this.weight = item.name
+    },
+    addToCart() {
+      if (this.currentVariationName !== 'обЪем' && !this.inCart) {
+        if (this.hasVariations) {
+          this.$store.dispatch('cart/addToCart', {
+            product_id: this.product.id,
+            variation_id: this.currentVariationID,
+            quantity: this.quantity,
+            name: this.product.name,
+            price: parseInt(this.currentPrice)
+          })
+        } else {
+          this.$store.dispatch('cart/addToCart', {
+            product_id: this.product.id,
+            variation_id: this.product.id + 1,
+            quantity: this.quantity,
+            name: this.product.name,
+            price: parseInt(this.currentPrice)
+          })
+        }
+        this.inCart = true
+      }
+    },
   }
 }
 </script>
@@ -370,9 +544,11 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.jcsb{
+
+.jcsb {
   justify-content: space-between;
 }
+
 .compound {
   margin-top: rem(49);
   margin-bottom: rem(90);
@@ -455,7 +631,7 @@ export default {
 .goods__add-to-cart__table {
   padding: rem(32) rem(20) rem(36) rem(18);
   background: #f9f9f9;
-  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  box-shadow: 0 5px 12px rgba(16, 20, 15, 0.12);
 }
 
 .__go-to-basket {
@@ -470,7 +646,7 @@ export default {
 
 .price {
   h2 {
-    font-family: 'Aqum2';
+    font-family: 'Aqum2', sans-serif;
     font-style: normal;
     font-weight: 900;
     font-size: 24px;
@@ -483,17 +659,56 @@ export default {
   align-items: center;
   gap: rem(12);
   margin-top: rem(16);
+  max-width: rem(147);
+}
+
+.value-select {
+  margin-top: rem(20);
+  max-width: rem(147);
+  position: relative;
+}
+
+.value-select__arrow {
+  display: flex;
+  transition: transform 0.3s;
+}
+
+.__arrow_round {
+  transform: rotate(180deg);
+}
+
+.value-select__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: rem(10) 0;
+  user-select: none;
+  cursor: pointer;
+}
+
+.value-select_body {
+  gap: rem(12);
+  background: #F9F9F9;
+  border: 1px solid #EAEBEA;
+}
+
+.value-select__list {
+  position: absolute;
+  width: 100%;
+  background-color: #FFFFFF;
 }
 
 .__count__elem {
   width: rem(41);
   height: rem(32);
+  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: rem(24);
   background: #FFFFFF;
   border: 1px solid #EAEBEA;
+  user-select: none;
 }
 
 .minus, .plus {

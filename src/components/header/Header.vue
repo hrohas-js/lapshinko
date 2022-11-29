@@ -6,7 +6,8 @@
       </router-link>
       <div class="header__menu">
         <div class="__menu__item">
-          <span>О&nbsp;нас</span>&nbsp;<img src="@/assets/svg/arrowDown.svg" alt="open">
+          <span>О&nbsp;нас</span>&nbsp;
+          <img src="@/assets/svg/arrowDown.svg" alt="open">
         </div>
         <div class="__menu__item">
           <span>Доставка</span>
@@ -15,10 +16,7 @@
           <span>Блог</span>
         </router-link>
       </div>
-      <div class="header__search">
-        <input type="text" placeholder="Поиск">
-        <img src="@/assets/svg/search.svg" alt="search">
-      </div>
+      <Search />
       <div class="header__user-panel">
         <router-link to="/wishlist" class="__user-panel__item">
           <img src="@/assets/svg/wishList.svg" alt="wish list">
@@ -40,10 +38,11 @@
       </div>
       <div class="header__contacts">
         <a href="tel:+79876543210">
-        <span>
-        Обратная связь
-      </span>
-          <span>89876543210</span></a>
+          <span>
+            Обратная связь
+          </span>
+          <span>89876543210</span>
+        </a>
       </div>
     </div>
   </div>
@@ -69,10 +68,12 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import {mapState, mapGetters} from "vuex";
+import Search from "@/components/UI/Search";
 
 export default {
   name: 'Header',
+  components: {Search},
   computed: {
     ...mapState({
       width: 'displayWidth'
@@ -148,28 +149,6 @@ span {
 
   span {
     color: #629C42;
-  }
-}
-
-.header__search {
-  margin-left: rem(71);
-  margin-right: rem(74);
-  cursor: pointer;
-  position: relative;
-
-  input {
-    width: rem(330);
-    height: rem(38);
-    padding: 0 rem(16);
-    border: 1px solid #C0C0C0;
-    background: #F9F9F9;
-    color: #585858;
-  }
-
-  img {
-    position: absolute;
-    right: rem(6);
-    top: rem(7);
   }
 }
 

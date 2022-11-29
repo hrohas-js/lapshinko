@@ -55,6 +55,7 @@ export default {
       this.$store.commit('SET_DISPLAY_WIDTH', this.$refs.main.getBoundingClientRect().width);
     });
     this.$store.dispatch('cart/setCart')
+    this.$store.dispatch('wishlist/setWishList')
   }
 }
 </script>

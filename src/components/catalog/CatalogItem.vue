@@ -24,7 +24,7 @@
           class="__price __text"
           :class="{'__price_new':$route.name !== 'WishList'}"
       >
-        {{ item.price }} ₽/кг
+        {{ item.price }} ₽/ед
       </div>
       <div
           v-if="width < 1024 || $route.name === 'WishList' ||  $route.name === 'Profile'"
@@ -45,7 +45,7 @@
         </div>
         <div class="price-button">
           <div class="__price" v-if="$route.name !=='Profile'">
-            {{ item.price }} ₽/кг
+            {{ item.price }} ₽/ед
           </div>
           <div
               v-if=" $route.name !== 'Profile'"
@@ -63,13 +63,13 @@
         <div class="__choose-container __text">
           <div class="_mini-title">{{ item.name }}</div>
           <div class="__price">
-            {{ item.price }} ₽/кг
+            {{ item.price }} ₽/ед
           </div>
         </div>
-        <div class="__description">
+        <div v-if="$route.name !== 'WishList'" class="__description">
           <span v-if="this.properties !== ''">Состав: {{ this.properties }}</span>
         </div>
-        <div class="__shelf-life">
+        <div v-if="$route.name !== 'WishList'" class="__shelf-life">
           {{ this.lifetime }}
         </div>
         <div class="__buttons">
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: 'CatalogItem',
@@ -136,14 +136,20 @@ export default {
   methods: {
     fetchLike() {
       this.heart = !this.heart
-      this.$store.dispatch('wishlist/updateWishlist', {
-        flag: this.heart,
-        item: this.item
-      })
+      if (this.heart) {
+        this.$store.dispatch('wishlist/addToWishList', {
+          id: this.item.id,
+          name: this.item.name,
+          price: parseInt(this.item.price)
+        })
+      } else {
+        this.$store.dispatch('wishlist/deleteFromWishList', this.item.id)
+      }
     },
     addToCart() {
       this.$store.dispatch('cart/addToCart', {
         product_id: this.item.id,
+        variation_id: this.item.id + 1,
         quantity: 1,
         name: this.item.name,
         price: parseInt(this.item.price)
@@ -151,7 +157,7 @@ export default {
     },
     goToProduct() {
       if (this.width <= 1024) {
-        this.$router.push({name:'GoodsCard',params:{id:this.item.id}})
+        this.$router.push({name: 'GoodsCard', params: {id: this.item.id}})
       }
     }
   }
@@ -188,7 +194,7 @@ export default {
 
 .food-container {
   position: relative;
-  box-shadow: 0px 2px 6px rgba(21, 27, 19, 0.08);
+  box-shadow: 0 2px 6px rgba(21, 27, 19, 0.08);
 
   .food-item_wish {
     flex-direction: row;
@@ -258,7 +264,7 @@ export default {
   top: 0;
   z-index: 1111;
   background: #FFFFFF;
-  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  box-shadow: 0 5px 12px rgba(16, 20, 15, 0.12);
 
   .__choose-container {
     background: #F9F9F9;
@@ -313,7 +319,7 @@ export default {
     padding: rem(12) rem(29);
     color: #FFFFFF;
     background: radial-gradient(146.15% 470.67% at 52.25% 118.27%, rgba(3, 102, 52, 0.2) 0%, rgba(3, 102, 52, 0.2) 100%), linear-gradient(81.93deg, #629C42 0.16%, #A0C90B 113.53%);
-    box-shadow: 0px 2px 6px rgba(21, 27, 19, 0.08);
+    box-shadow: 0 2px 6px rgba(21, 27, 19, 0.08);
     transition: filter 0.4s;
 
     &:hover {

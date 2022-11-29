@@ -52,7 +52,7 @@ export const Cart = {
             }
         },
         updateCart({state, rootState, dispatch}) {
-            if (Object.keys(rootState.profile.user).length > 0 && state.cart.length > 0) {
+            if (Object.keys(rootState.profile.user).length > 0) {
                 dispatch('profile/updateUser', {
                     meta: {
                         cart: state.cart

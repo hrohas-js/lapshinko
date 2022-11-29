@@ -1,4 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
+import store from '../store/index'
 
 const Home = () => import("@/pages/Home");
 const Catalog = () => import ("@/pages/catalog/Catalog");
@@ -10,6 +11,8 @@ const GoodsCard = () => import('@/pages/GoodsCard');
 const Profile = () => import('@/pages/Profile');
 const Cart = () => import('@/pages/Cart');
 const CheckOut = () => import('@/pages/CheckOut');
+const NotFound = () => import('@/pages/NotFound');
+
 const routes = [
     {
         path: '/',
@@ -61,7 +64,11 @@ const routes = [
         name: 'CheckOut',
         component: CheckOut
     },
-
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: NotFound
+    }
 ]
 
 const router = createRouter({
@@ -72,6 +79,15 @@ const router = createRouter({
             left: 0,
             behavior: 'smooth'
         });
+    }
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.name === 'Profile' && !store.getters['profile/isUserExist']) {
+        next('/')
+    }
+    else {
+        next()
     }
 })
 

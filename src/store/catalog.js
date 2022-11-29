@@ -1,10 +1,10 @@
 export const Catalog = {
     state: () => ({
-        catalog: [],
+        catalog: []
     }),
     mutations: {
-        SET_CATALOG(state, item){
-            state.catalog = item;
+        SET_CATALOG(state, catalog){
+            state.catalog = catalog;
             console.log(state.catalog);
         }
     },

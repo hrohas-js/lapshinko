@@ -1,6 +1,7 @@
 <template>
   <div class="burger">
     <div class="burger-content">
+      <Search />
       <div class="burger__group">
         <router-link
             :to="{name: 'CatalogBody', params: {categoryId: 'all', subcategoryId: 'all'}}"
@@ -12,12 +13,6 @@
           </div>
           <span>Каталог</span>
         </router-link>
-        <div class="__group__item" @click="hideBurger">
-          <div>
-            <img src="@/assets/svg/burgerSearch.svg" alt="поиск">
-          </div>
-          <span>Поиск</span>
-        </div>
       </div>
       <div class="burger__group">
         <div class="__group__item" @click="hideBurger">
@@ -69,9 +64,14 @@
 
 <script>
 import { mapGetters } from "vuex";
+import Search from "@/components/UI/Search";
 
 export default {
   name: 'Burger',
+  components: {Search},
+  data: () => ({
+    showSearch: false
+  }),
   computed: {
     ...mapGetters('profile', {
       isAuth: 'isUserExist'
@@ -107,6 +107,10 @@ export default {
   padding: rem(15);
 }
 
+.search-box {
+  position: absolute;
+}
+
 .burger-content {
   display: flex;
   flex-direction: column;
@@ -124,6 +128,7 @@ export default {
 .__group__item {
   display: flex;
   gap: rem(8);
+  position: relative;
   & > div {
     flex: 1 1 10%;
   }

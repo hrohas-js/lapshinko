@@ -67,6 +67,7 @@ export default {
         password: 'rus256303'
       });
       this.$store.commit('cart/SET_CART', [])
+      this.$store.commit('wishlist/SET_WISHLIST', [])
     }
   }
 }

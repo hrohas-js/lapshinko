@@ -1,13 +1,13 @@
-import {createStore} from 'vuex'
-import {Category} from "@/store/category";
-import {News} from "@/store/news";
-import {NewsPreview} from "@/store/newsPreview";
-import {catalogSettings} from "@/store/catalogSettings";
-import {Product} from "@/store/product";
-import {Profile} from "@/store/profile";
-import {Catalog} from "@/store/catalog";
-import {Wishlist} from "@/store/wishlist";
-import {Cart} from "@/store/cart";
+import { createStore } from 'vuex'
+import { Category } from "@/store/category";
+import { News } from "@/store/news";
+import { NewsPreview } from "@/store/newsPreview";
+import { catalogSettings } from "@/store/catalogSettings";
+import { Product } from "@/store/product";
+import { Profile } from "@/store/profile";
+import { Catalog } from "@/store/catalog";
+import { Wishlist } from "@/store/wishlist";
+import { Cart } from "@/store/cart";
 import axios from 'axios';
 
 export default createStore({
