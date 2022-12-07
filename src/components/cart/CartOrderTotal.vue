@@ -25,27 +25,19 @@
         <div class="__info">
           Общая стоимость
         </div>
-        <div v-if="total < free" class="__count _sub-title">
-          {{ total + deliveryPrice }} ₽
-        </div>
-        <div v-else class="__count _sub-title">
+        <div class="__count _sub-title">
           {{ total }} ₽
         </div>
       </div>
-      <span v-if="total >= free" class="text">
-        *доставка бесплатная
-      </span>
-      <span v-else class="text">
-        *в сумму заказа включена стоимость доставки {{ deliveryPrice }} ₽
-      </span>
     </div>
-    <router-link
-        to="/checkout"
+    <div
         v-if="width < 1025 || width >=1025 && $route.name === 'Cart'"
         class="checkout _button"
+        :class="{'_button_disable': total < min}"
+        @click="goToCheckout"
     >
       Перейти к оформлению
-    </router-link>
+    </div>
     <router-link
         to="/catalog"
         v-if="$route.name === 'Cart'"
@@ -67,8 +59,7 @@ export default {
     }),
     ...mapState('cart', {
       min: 'minCost',
-      free: 'freeDeliveryCostCart',
-      deliveryPrice: 'deliveryCost'
+      free: 'freeDeliveryCostCart'
     }),
     ...mapGetters('cart', {
       total: 'cartTotal'
@@ -76,6 +67,13 @@ export default {
     progressBar() {
       let onePercent = this.min / 100;
       return Math.round(this.total / onePercent);
+    }
+  },
+  methods: {
+    goToCheckout() {
+      if (this.total >= this.min) {
+        this.$router.push('/checkout')
+      }
     }
   }
 }

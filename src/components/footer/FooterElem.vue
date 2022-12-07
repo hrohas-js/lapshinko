@@ -32,7 +32,7 @@
           </div>
           <div class="contacts">
             <span class="_link">Заказывайте товары и задавайте вопросы</span>
-            <a href="callto:89876543210" class="_title">8 (987) 654-32-10</a>
+            <a href="tel:+79876543210" class="_title">8 (987) 654-32-10</a>
             <div class="social">
               <span class="_link">Наши социальные сети</span>
               <img src="@/assets/svg/vk.svg" alt="соц.сеть">
@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="copyright">
-          <a href="https://ed-webdev.pro/">Caйт создан командой: EVERYTHING DIGITAL</a>
+          <a href="https://ed-webdev.pro/" target="_blank">Caйт создан командой: EVERYTHING DIGITAL</a>
           <p>2016–2022 © ООО «КФХ Лапшино»</p>
         </div>
       </div>
@@ -81,7 +81,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   background: #FFFFFF;
-  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  box-shadow: 0 5px 12px rgba(16, 20, 15, 0.12);
   margin-right: rem(33);
 }
 

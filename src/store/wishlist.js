@@ -13,7 +13,7 @@ export const Wishlist = {
             state.wishlist = state.wishlist.filter(elem => {
                 return elem.id !== id
             })
-        },
+        }
     },
     actions: {
         setWishList({rootState, commit}) {
@@ -43,7 +43,7 @@ export const Wishlist = {
         deleteFromWishList({commit, dispatch}, id) {
             commit('DELETE_FROM_WISHLIST', id)
             dispatch('updateWishList')
-        },
+        }
     },
     namespaced: true
 }

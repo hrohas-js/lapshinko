@@ -12,12 +12,20 @@
                 <div class="__image">
                   <img src="@/assets/svg/Vector.svg" alt="оформление заказа">
                 </div>
-                <div class="_border" :class="{'_border_disabled': !optionDelivery.show && !optionDelivery.action, '_border_filled': !optionDelivery.show && optionDelivery.action}"></div>
+                <div
+                    class="_border"
+                    :class="{'_border_disabled': !optionDelivery.show && !optionDelivery.action, '_border_filled': !optionDelivery.show && optionDelivery.action}"
+                />
               </div>
               <div class="checkout-item__container">
                 <div class="checkout-item__header">
                   <div class="delivery__title" @click="openDelivery">
-                    <h2 class="_sub-title" :class="{'active-header':width <= 768 && optionDelivery.action}">Способ доставки</h2>
+                    <h2
+                        class="_sub-title"
+                        :class="{'active-header':width <= 768 && optionDelivery.action}"
+                    >
+                      Способ доставки
+                    </h2>
                     <img src="@/assets/svg/arrow-down.svg" alt="открыть полностью">
                   </div>
                 </div>
@@ -26,8 +34,14 @@
                     <div class="delivery__options">
                       <div class="__options-container__header">
                         <div class="__options-container__title">
-                          <input type="radio" id="pickup" name="delivery" class="custom-radio" value="self"
-                                 v-model="optionDelivery.options">
+                          <input
+                              type="radio"
+                              id="pickup"
+                              name="delivery"
+                              class="custom-radio"
+                              value="self"
+                              v-model="optionDelivery.options"
+                          />
                           <label for="pickup">
                             Самовывоз
                           </label>
@@ -35,14 +49,20 @@
                         <img src="@/assets/svg/house.svg" alt="cамовывоз">
                       </div>
                       <div class="__options-container__text">
-                        Забрать в одном из пунктов <span>бесплатно</span>
+                        Забрать в пункте <span>бесплатно</span>
                       </div>
                     </div>
                     <div class="delivery__options">
                       <div class="__options-container__header">
                         <div class="__options-container__title">
-                          <input type="radio" id="delivery-mean" name="delivery" class="custom-radio" value="cura"
-                                 v-model="optionDelivery.options">
+                          <input
+                              type="radio"
+                              id="delivery-mean"
+                              name="delivery"
+                              class="custom-radio"
+                              value="cura"
+                              v-model="optionDelivery.options"
+                          />
                           <label for="delivery-mean">
                             Курьерская доставка
                           </label>
@@ -50,45 +70,89 @@
                         <img src="@/assets/svg/compas.svg" alt="курьерская доставка">
                       </div>
                       <div class="__options-container__text">
-                        описание условий доставки
+                        Сбор и доставка вашего заказа осуществляется в течение 10-14 дней с момента оформления заказа.
                       </div>
                     </div>
                   </div>
-                  <div class="_button _button_mobile" :class="{'_button_disable':optionDelivery.options == null}"
-                       @click="actionDelivery">
+                  <div
+                      class="_button _button_mobile"
+                      :class="{'_button_disable':optionDelivery.options == null}"
+                      @click="actionDelivery"
+                  >
                     Далее
                   </div>
                 </div>
               </div>
             </div>
-            <div class="checkout-item" :class="{'checkout-item_closed':!optionPickup.show}">
+            <div class="checkout-item" :class="{'checkout-item_closed': !optionPickup.show}">
               <div class="left-decor">
-                <div class="_border" :class="{'_border_disabled': !optionPickup.show && !optionPickup.action, '_border_filled': !optionPickup.show && optionPickup.action}"></div>
+                <div
+                    class="_border"
+                    :class="{'_border_disabled': !optionPickup.show && !optionPickup.action, '_border_filled': !optionPickup.show && optionPickup.action}"
+                />
                 <div class="__image">
                   <img src="@/assets/svg/Vector.svg" alt="оформление заказа">
                 </div>
-                <div class="_border"></div>
+                <div class="_border"/>
               </div>
               <div class="checkout-item__container">
                 <div class="checkout-item__header">
                   <div class="delivery__title" @click="openPickup">
-                    <h2 class="_sub-title">выберите пункт самовывоза</h2>
+                    <h2 class="_sub-title">
+                      адрес доставки
+                    </h2>
                     <img src="@/assets/svg/arrow-down.svg" alt="открыть полностью">
                   </div>
                 </div>
                 <div v-if="optionPickup.show">
-                  <div class="address">
+                  <div v-if="optionDelivery.options === 'cura'" class="address address-data">
+                    <input
+                        type="text"
+                        placeholder="Имя"
+                        v-model="address.name"
+                        @input="address.name = address.name.replace(/[^ a-zа-яё]/ui,'')"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Фамилия"
+                        v-model="address.surname"
+                        @input="address.surname = address.surname.replace(/[^ a-zа-яё]/ui,'')"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Улица, дом, квартира"
+                        v-model="address.addressValue"
+                    />
+                    <input
+                        type="email"
+                        placeholder="E-mail"
+                        v-model="address.email"
+                    />
+                    <input
+                        type="tel"
+                        placeholder="Телефон"
+                        v-model="address.phone"
+                    />
+                  </div>
+                  <div v-else class="address">
                     <div class="__items-container">
-                      <div class="__item" @click="setOptionPickup('address')">Адрес и название</div>
-                      <div class="__item" @click="setOptionPickup('address')">Адрес и название</div>
-                      <div class="__item" @click="setOptionPickup('address')">Адрес и название</div>
+                      <div class="__item" @click="setOptionPickup('address')">
+                        Тверская область, Кашинский район, КФХ-Лапшино
+                      </div>
                     </div>
                     <div class="address__map" v-if="width > 846">
-                      <div class="__map__item"></div>
+                      <div class="__map__item">
+                        <iframe
+                            src="https://yandex.ru/map-widget/v1/?um=constructor%3A6fba0f563c6d83fb82743fcc85bd1f041a55fd0617289c721050cf9698fae047&amp;source=constructor"
+                            width="100%" height="253" frameborder="0"></iframe>
+                      </div>
                     </div>
                   </div>
-                  <div class="_button _button_mobile" :class="{'_button_disable':optionPickup.options == null}"
-                       @click="actionPickup">
+                  <div
+                      class="_button _button_mobile"
+                      :class="{'_button_disable': optionPickup.options === null || isAddressEmpty}"
+                      @click="actionPickup"
+                  >
                     Далее
                   </div>
                 </div>
@@ -96,7 +160,10 @@
             </div>
             <div class="checkout-item" :class="{'checkout-item_closed':!optionPay.show}">
               <div class="left-decor">
-                <div class="_border" :class="{'_border_disabled': !optionPay.show && !optionPay.action, '_border_filled': !optionPay.show && optionPay.action}"></div>
+                <div
+                    class="_border"
+                    :class="{'_border_disabled': !optionPay.show && !optionPay.action, '_border_filled': !optionPay.show && optionPay.action}"
+                />
                 <div class="__image">
                   <img src="@/assets/svg/Vector.svg" alt="оформление заказа">
                 </div>
@@ -113,8 +180,14 @@
                     <div class="choose-pay__container">
                       <div class="__container__item">
                         <div class="__container__input">
-                          <input type="radio" name="pay" id="cash" class="custom-radio" value="cash"
-                                 v-model="optionPay.options">
+                          <input
+                              type="radio"
+                              name="pay"
+                              id="cash"
+                              class="custom-radio"
+                              value="cash"
+                              v-model="optionPay.options"
+                          />
                           <label for="cash">
                             Наличными
                           </label>
@@ -123,8 +196,14 @@
                       </div>
                       <div class="__container__item">
                         <div class="__container__input">
-                          <input type="radio" name="pay" id="bankСard" class="custom-radio" value="card"
-                                 v-model="optionPay.options">
+                          <input
+                              type="radio"
+                              name="pay"
+                              id="bankСard"
+                              class="custom-radio"
+                              value="card"
+                              v-model="optionPay.options"
+                          />
                           <label for="bankСard">
                             По карте
                           </label>
@@ -153,27 +232,30 @@
           <div class="check-out-panel">
             <div class="check-out-panel__header" v-if="width >= 846">
               <span>К оплате</span>
-              <span class="_sub-title">2 160,00 ₽</span>
+              <span class="_sub-title">{{ summary }} ₽</span>
             </div>
             <div class="check-out-panel__content">
               <div class="__content__goods">
-                <h2>Товары (6) </h2>
+                <h2>Товары ({{ length }}) </h2>
                 <div class="__goods__item">
                     <span>
                       Итог
                     </span>
-                  <div class="count__border" v-if="width > 1201"></div>
-                  <span>2 160,00 ₽</span>
+                  <div class="count__border" v-if="width > 1201"/>
+                  <span>{{ total }} ₽</span>
                 </div>
               </div>
               <div class="__content__goods">
                 <h2>Доставка</h2>
                 <div class="__goods__item">
-                    <span>
-                      Самовывоз
-                    </span>
-                  <div class="delivery__border" v-if="width > 1201"></div>
-                  <span>2 160,00 ₽</span>
+                  <span v-if="deliveryCost === 0">
+                    Самовывоз
+                  </span>
+                  <span v-else>
+                    Курьерская
+                  </span>
+                  <div class="delivery__border" v-if="width > 1201"/>
+                  <span>{{ deliveryCost }} ₽</span>
                 </div>
               </div>
               <div class="check-out-panel__buttons">
@@ -209,6 +291,8 @@
 </template>
 
 <script>
+import {mapState, mapGetters} from "vuex";
+
 export default {
   name: 'CheckOut',
   data: () => ({
@@ -227,19 +311,47 @@ export default {
       action: false,
       show: false
     },
-    showThanks: false
+    showThanks: false,
+    address: {
+      name: '',
+      surname: '',
+      addressValue: '',
+      email: '',
+      phone: ''
+    }
   }),
   computed: {
-    width() {
-      return this.$store.state.displayWidth;
-    },
+    ...mapState({
+      width: 'displayWidth'
+    }),
+    ...mapState('cart', {
+      freeDelivery: 'freeDeliveryCostCart'
+    }),
+    ...mapGetters('cart', {
+      total: 'cartTotal',
+      length: 'cartLength'
+    }),
     confirmCheckout() {
-      if (this.optionDelivery.action && this.optionPickup.action && this.optionPay.action) {
-        return true;
+      return this.optionDelivery.action && this.optionPickup.action && this.optionPay.action;
+    },
+    deliveryCost() {
+      if (this.optionDelivery.options === 'cura' && this.total < this.freeDelivery) {
+        return 300
+      } else {
+        return 0
       }
-      else {
-        return false;
-      }
+    },
+    summary() {
+      return this.total + this.deliveryCost
+    },
+    isAddressEmpty() {
+      let flag = false
+      Object.values(this.address).forEach(elem => {
+        if (elem === '') {
+          flag = true
+        }
+      })
+      return flag
     }
   },
   methods: {
@@ -249,30 +361,38 @@ export default {
       }
     },
     actionDelivery() {
-      this.optionDelivery.show = false;
-      this.optionDelivery.action = true;
-      this.optionPickup.show = true;
+      if (this.optionDelivery.options !== null) {
+        this.optionDelivery.show = false;
+        this.optionDelivery.action = true;
+        this.optionPickup.show = true;
+      }
     },
     openPickup() {
-      this.optionPickup.show = !this.optionPickup.show;
+      if (this.optionDelivery.action) {
+        this.optionPickup.show = !this.optionPickup.show;
+      }
     },
     actionPickup() {
-      this.optionPickup.show = false;
-      this.optionPickup.action = true;
-      this.optionPay.show = true;
+      if (this.optionPickup.options !== null || !this.isAddressEmpty) {
+        this.optionPickup.show = false;
+        this.optionPickup.action = true;
+        this.optionPay.show = true;
+      }
     },
     setOptionPickup(item) {
       this.optionPickup.options = item;
     },
     openPay() {
-      this.optionPay.show = !this.optionPay.show;
+      if (this.optionPickup.action) {
+        this.optionPay.show = !this.optionPay.show;
+      }
     },
     actionPay() {
       this.optionPay.show = false;
       this.optionPay.action = true;
     },
     goToPayment() {
-      if(this.confirmCheckout) {
+      if (this.confirmCheckout) {
         this.showThanks = true;
       }
     },
@@ -304,6 +424,7 @@ export default {
   background: #F9F9F9;
   height: rem(132);
   border: none;
+
   .delivery__title {
     img {
       transform: none;
@@ -386,6 +507,23 @@ export default {
   padding-right: rem(18);
   display: flex;
   gap: rem(47)
+}
+
+.address-data {
+  flex-direction: column;
+  gap: rem(10);
+  input {
+    width: 100%;
+    max-width: rem(280);
+    border: 1px solid #C0C0C0;
+    background: #F9F9F9;
+    color: #585858;
+    padding: rem(16);
+  }
+}
+
+.__items-container {
+  flex: 1 1 50%;
 }
 
 .__item {
@@ -484,7 +622,7 @@ textarea {
 .check-out-panel {
   flex: 1 1 26.8%;
   background: #FFFFFF;
-  box-shadow: 0px 12px 33px -2px rgba(21, 27, 19, 0.1);
+  box-shadow: 0 12px 33px -2px rgba(21, 27, 19, 0.1);
   max-height: rem(400);
 }
 
@@ -492,7 +630,7 @@ textarea {
   display: flex;
   justify-content: space-between;
   background: #F9F9F9;
-  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  box-shadow: 0 5px 12px rgba(16, 20, 15, 0.12);
   padding: rem(32) rem(16) rem(28) rem(16);
 }
 
@@ -574,6 +712,7 @@ textarea {
   gap: rem(8);
   margin-top: rem(92);
   position: relative;
+
   &:before {
     content: '';
     position: absolute;
@@ -582,6 +721,7 @@ textarea {
     height: rem(172);
     border-right: 4px dotted #D9AC94;
   }
+
   &:after {
     content: '';
     position: absolute;
@@ -666,9 +806,11 @@ textarea {
   }
   .modal__thanks {
     flex-direction: column;
+
     ._title {
       text-align: center;
     }
+
     img {
       height: rem(23);
     }
@@ -698,9 +840,11 @@ textarea {
   }
   .modal__thanks {
     flex-direction: column;
+
     ._title {
       text-align: center;
     }
+
     img {
       height: rem(23);
     }

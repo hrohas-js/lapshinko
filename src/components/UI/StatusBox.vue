@@ -7,15 +7,15 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: 'StatusBox',
   computed: {
-    text() {
-      return this.$store.state.statusText;
-    },
-    showed() {
-      return this.$store.state.showedStatus;
-    }
+    ...mapState({
+      text: 'statusText',
+      showed: 'showedStatus'
+    })
   }
 }
 </script>
