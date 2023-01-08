@@ -13,8 +13,8 @@
     </div>
     <div class="__progress-bar-container">
       <div class="__progress-bar">
-        <div v-if="total >= min" class="__progress-bar__well-done"></div>
-        <div v-else class="__progress-bar__not-enough" :style="{width:progressBar + '%'}"></div>
+        <div v-if="total >= min" class="__progress-bar__well-done" />
+        <div v-else class="__progress-bar__not-enough" :style="{width:progressBar + '%'}" />
       </div>
       <span class="text">
         Доставка бесплатная при заказе от {{ free }}&nbsp;₽
@@ -83,13 +83,13 @@ export default {
 .cart-order-total-container {
   padding: rem(32) rem(42) rem(32) rem(24);
   background: #F9F9F9;
-  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  box-shadow: 0 5px 12px rgba(16, 20, 15, 0.12);
 }
 
 .cart-order-total-container-mobile {
   padding: rem(32) 0 rem(36);
   background: #F9F9F9;
-  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  box-shadow: 0 5px 12px rgba(16, 20, 15, 0.12);
 }
 
 .__header {

@@ -5,24 +5,27 @@ export const Category = {
 
             {
                 id: '1',
-                picture: 'https://dreamteam-webdev.ru/lapshinkoServ/png/category/milkProducts.webp',
-                miniImg: 'https://dreamteam-webdev.ru/lapshinkoServ/png/categoryMob/milkProducts.webp',
+                picture: 'http://lapshinka-api.store/lapshinkoServ/png/category/milkProducts.webp',
+                miniImg: 'http://lapshinka-api.store/lapshinkoServ/png/categoryMob/milkProducts.webp',
                 name: 'молочная продукция',
-                rating: '1'
+                rating: '1',
+                link: '/catalog-body/86/all'
             },
             {
                 id: '2',
-                picture: 'https://dreamteam-webdev.ru/lapshinkoServ/png/category/meatProducts.webp',
-                miniImg: 'https://dreamteam-webdev.ru/lapshinkoServ/png/categoryMob/meatProducts.webp',
+                picture: 'http://lapshinka-api.store/lapshinkoServ/png/category/meatProducts.webp',
+                miniImg: 'http://lapshinka-api.store/lapshinkoServ/png/categoryMob/meatProducts.webp',
                 name: 'мясная продукция',
-                rating: '3'
+                rating: '3',
+                link: '/catalog-body/151/all'
             },
             {
                 id: '3',
-                picture: 'https://dreamteam-webdev.ru/lapshinkoServ/png/category/vegetableProducts.webp',
-                miniImg: 'https://dreamteam-webdev.ru/lapshinkoServ/png/categoryMob/vegetableProducts.webp',
+                picture: 'http://lapshinka-api.store/lapshinkoServ/png/category/vegetableProducts.webp',
+                miniImg: 'http://lapshinka-api.store/lapshinkoServ/png/categoryMob/vegetableProducts.webp',
                 name: 'овощи',
-                rating: '3'
+                rating: '3',
+                link: '/catalog-body/243/all'
             }
         ]
     }),
@@ -52,7 +55,7 @@ export const Category = {
                 }
             })
             commit('SET_CATEGORIES', response.data);
-        },
-        },
+        }
+    },
     namespaced: true
 }

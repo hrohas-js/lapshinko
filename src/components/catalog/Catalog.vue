@@ -1,23 +1,23 @@
 <template>
   <section class="container">
     <div class="section-header">
-      <div class="section-title" v-if="title == 'new' || title == 'card'">
+      <div v-if="title === 'new' || title === 'card'" class="section-title">
         <h2 class="_title">
           Новые поступления
         </h2>
         <img src="@/assets/svg/new.svg" alt="новинки">
       </div>
-      <div class="section-title" v-if="title == 'choose'">
+      <div v-if="title === 'choose'" class="section-title">
         <h2 class="_title">
           выбор покупателей
         </h2>
       </div>
     </div>
-    <div class="choose-container" v-if="title == 'new'">
-      <CatalogItem v-for="item in newList" :key="item.id" :item="item"></CatalogItem>
+    <div v-if="title === 'new'" class="choose-container">
+      <CatalogItem v-for="item in newList" :key="item.id" :item="item" />
     </div>
-    <div class="choose-container" v-if="title == 'choose'">
-      <CatalogItem v-for="item in newList" :key="item.id" :item="item"></CatalogItem>
+    <div v-if="title === 'choose'" class="choose-container">
+      <CatalogItem v-for="item in newList" :key="item.id" :item="item" />
     </div>
   </section>
 </template>
@@ -46,12 +46,12 @@ export default {
 
   &::before {
     cursor: pointer;
-    content: url("https://dreamteam-webdev.ru/lapshinkoServ/png/catalog/arrow.svg");
+    content: url("http://lapshinka-api.store/lapshinkoServ/png/catalog/arrow.svg");
   }
 
   &::after {
     cursor: pointer;
-    content: url("https://dreamteam-webdev.ru/lapshinkoServ/png/catalog/arrow.svg");
+    content: url("http://lapshinka-api.store/lapshinkoServ/png/catalog/arrow.svg");
     transform: rotateY(180deg);
   }
 }

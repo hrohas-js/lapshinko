@@ -40,7 +40,7 @@ export default {
 
 <style scoped lang="scss">
 .page-banner {
-  background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/wishList/wishListBanner.webp") right;
+  background: url("http://lapshinka-api.store/lapshinkoServ/png/wishList/wishListBanner.webp") right;
   background-size: cover;
 }
 
@@ -71,7 +71,7 @@ export default {
 
 @media (max-width: em(520, 16)) {
   .page-banner {
-    background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/wishList/wishListBannerMob.webp") right no-repeat;
+    background: url("http://lapshinka-api.store/lapshinkoServ/png/wishList/wishListBannerMob.webp") right no-repeat;
     background-size: cover;
   }
   .wish-list-container {

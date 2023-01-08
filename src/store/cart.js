@@ -2,7 +2,8 @@ export const Cart = {
     state: () => ({
         cart: [],
         minCost: 1000,
-        freeDeliveryCostCart: 3000
+        freeDeliveryCostCart: 3000,
+        deliveryCost: 300
     }),
     getters: {
         cartLength: state => {

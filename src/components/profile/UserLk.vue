@@ -68,6 +68,7 @@ export default {
       });
       this.$store.commit('cart/SET_CART', [])
       this.$store.commit('wishlist/SET_WISHLIST', [])
+      this.$store.commit('profile/CLEAN_ORDERS')
     }
   }
 }

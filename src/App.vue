@@ -48,6 +48,7 @@ export default {
         password: 'rus256303'
       });
     }
+    this.$store.dispatch('news/fetchNews')
   },
   mounted() {
     this.$store.commit('SET_DISPLAY_WIDTH', this.$refs.main.getBoundingClientRect().width);
@@ -56,6 +57,7 @@ export default {
     });
     this.$store.dispatch('cart/setCart')
     this.$store.dispatch('wishlist/setWishList')
+    this.$store.dispatch('profile/fetchOrders')
   }
 }
 </script>
@@ -373,3 +375,5 @@ h1, h2, h3, h4, h5 {
   }
 }
 </style>
+
+

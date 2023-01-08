@@ -1,8 +1,10 @@
 <template>
   <router-link
       :to="{name:'CatalogBody', params:{categoryId:$route.params.categoryId, subcategoryId:eat.id}}"
-      :class="{active:eat.id == $route.params.subcategoryId}" class="sub-filter"
-      @click="clearPrice">
+      class="sub-filter"
+      :class="{active:eat.id === parseInt($route.params.subcategoryId)}"
+      @click="clearPrice"
+  >
     {{ eat.name }}
   </router-link>
 </template>

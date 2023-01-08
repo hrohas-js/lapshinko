@@ -1,29 +1,31 @@
 <template>
   <section  class="container">
     <div class="section-header">
-    <div class="section-title" v-if="title == 'popular'">
+    <div v-if="title === 'popular'" class="section-title">
       <h2 class="_title">
         популярные категории
       </h2>
       <img src="@/assets/svg/hit.svg" alt="хиты">
     </div>
-      <div class="section-title" v-if="title == 'catalog'">
+      <div v-if="title === 'catalog'" class="section-title">
         <h2 class="_title">
           каталог
         </h2>
       </div>
-      <div class="link-container" v-if="width >=550">
-        <link-to-all></link-to-all>
+      <div v-if="width >= 550" class="link-container">
+        <link-to-all @click="goToCatalog" />
       </div>
     </div>
     <div class="categories-container">
-      <CategoryItem v-for="elem in $store.state.category.PopularCategory" :product="elem" :key="elem.id" :position="'first'"></CategoryItem>
-    </div>
-    <div class="categories-container _last" v-if="$route.name == 'Catalog'">
-      <CategoryItem v-for="item in reverse" :product="item" :key="item.id" :position="'last'"></CategoryItem>
+      <CategoryItem
+          v-for="elem in $store.state.category.PopularCategory"
+          :product="elem"
+          :key="elem.id"
+          :position="'first'"
+      />
     </div>
     <div class="link-container">
-      <link-to-all v-if="width <550"></link-to-all>
+      <link-to-all v-if="width <550" @click="goToCatalog" />
     </div>
   </section>
 </template>
@@ -42,6 +44,11 @@ export default {
     },
     reverse(){
       return [...this.$store.state.category.PopularCategory].reverse()
+    }
+  },
+  methods: {
+    goToCatalog() {
+      this.$router.push('/catalog-body/all/all')
     }
   }
 }

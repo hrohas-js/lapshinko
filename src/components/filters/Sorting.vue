@@ -1,14 +1,25 @@
 <template>
   <div class="sub-filter-container">
     <div class="sub-filter" @click="showSub = !showSub">
-      <span>{{ sorteringVariant }}</span> <img src="@/assets/svg/arrow-down.svg" alt="сортировка каталога">
+      <span>
+        {{ sorteringVariant }}
+      </span>
+      <img src="@/assets/svg/arrow-down.svg" alt="сортировка каталога">
     </div>
     <transition name="slide-fade">
-      <div class="sub-filter__choose" v-if="showSub">
-        <span @click="fetch_sort('по цене: ниже' ,'priceDown')">по цене: ниже</span>
-        <span @click="fetch_sort('по цене: выше','priceUp')">по цене: выше</span>
-        <span @click="fetch_sort('по обновлению','update')">по обновлению</span>
-        <span @click="fetch_sort('по популярности','popular')">по популярности</span>
+      <div v-if="showSub" class="sub-filter__choose">
+        <span @click="fetch_sort('по цене: ниже' ,'priceDown')">
+          по цене: ниже
+        </span>
+        <span @click="fetch_sort('по цене: выше','priceUp')">
+          по цене: выше
+        </span>
+        <span @click="fetch_sort('по обновлению','update')">
+          по обновлению
+        </span>
+        <span @click="fetch_sort('по популярности','popular')">
+          по популярности
+        </span>
       </div>
     </transition>
   </div>
@@ -26,16 +37,12 @@ export default {
       switch (this.$store.state.catalogSettings.sortParams) {
         case 'priceDown':
           return 'по цене: ниже'
-          break;
         case 'priceUp':
           return 'по цене: выше'
-          break;
         case 'update':
           return 'по обновлению'
-          break;
         case 'popular':
           return 'по популярности'
-          break;
       }
     }
   },

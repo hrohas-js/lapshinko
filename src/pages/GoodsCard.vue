@@ -3,7 +3,7 @@
     <div v-if="width >= 770" class="_box-gap_bg wrapper">
       <section class="goods">
         <div class="slider">
-          <img :src="sliderMain.img" alt="продукт">
+          <img :src="sliderMain.src" alt="продукт">
           <div class="gallery-arrow before" @click="showPrevImg">
             <img src="@/assets/svg/galleryArrow.svg" alt="переключить картинку">
           </div>
@@ -33,7 +33,7 @@
                   Белки
                 </span>
                 <span class="kkal-count">
-                  1.4
+                  {{ amino }}
                 </span>
               </div>
               <div>
@@ -41,7 +41,7 @@
                   Жиры
                 </span>
                 <span class="kkal-count">
-                  92.8
+                  {{ fats }}
                 </span>
               </div>
               <div>
@@ -49,7 +49,7 @@
                   Углеводы
                 </span>
                 <span class="kkal-count">
-                  0
+                  {{ carbo }}
                 </span>
               </div>
               <div>
@@ -57,14 +57,14 @@
                   Ккал
                 </span>
                 <span class="kkal-count">
-                  841
+                  {{ energy }}
                 </span>
               </div>
             </div>
           </div>
           <div class="mini-slider">
             <div class="mini-slider__item" v-for="item in sliderSub" :key="item.id">
-              <img :src="item.img" alt="small-product">
+              <img :src="item.src" alt="small-product">
             </div>
           </div>
         </div>
@@ -171,14 +171,12 @@
         </div>
       </div>
       <div class="good-description _box-gap_bg">
-        <div class="__description" v-if="showDescription === 'desc'">
-          Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.1
-        </div>
+        <div class="__description" v-if="showDescription === 'desc'" v-html="product.description" />
         <div class="__description" v-if="showDescription === 'del'">
-          Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.2
+          Доставка осуществляется в течение 10-14 дней со дня оформления заказа.
         </div>
         <div class="__description" v-if="showDescription === 'pay'">
-          Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.3
+          Оплата производится курьеру наличными или картой. Выбрать вариант оплаты можно при оформлении заказа.
         </div>
       </div>
       <div class="container">
@@ -212,27 +210,47 @@
           </div>
         </div>
         <div class="compound">
-          <h2 :class="{'_sub-title':width > 450}">Состав:</h2>
+          <h2 :class="{'_sub-title':width > 450}">
+            Состав:
+          </h2>
           <span>{{ properties }}</span>
         </div>
         <div class="nutritional-value">
-          <h2>Пищевая ценность на 100 г:</h2>
+          <h2>
+            Пищевая ценность на 100 г:
+          </h2>
           <div class="__table">
             <div>
-              <span>Белки</span>
-              <span class="kkal-count">1.4</span>
+              <span>
+                Белки
+              </span>
+              <span class="kkal-count">
+                {{ amino }}
+              </span>
             </div>
             <div>
-              <span>Жиры</span>
-              <span class="kkal-count">92.8</span>
+              <span>
+                Жиры
+              </span>
+              <span class="kkal-count">
+                {{ fats }}
+              </span>
             </div>
             <div>
-              <span>Углеводы</span>
-              <span class="kkal-count">0</span>
+              <span>
+                Углеводы
+              </span>
+              <span class="kkal-count">
+                {{ carbo }}
+              </span>
             </div>
             <div>
-              <span>Ккал</span>
-              <span class="kkal-count">841</span>
+              <span>
+                Ккал
+              </span>
+              <span class="kkal-count">
+                {{ energy }}
+              </span>
             </div>
           </div>
         </div>
@@ -262,14 +280,12 @@
           </div>
         </div>
         <div class="good-description">
-          <div class="__description" v-if="showDescription === 'desc'">
-            Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.1
-          </div>
+          <div class="__description" v-if="showDescription === 'desc'" v-html="product.description" />
           <div class="__description" v-if="showDescription === 'del'">
-            Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.2
+            Доставка осуществляется в течение 10-14 дней со дня оформления заказа.
           </div>
           <div class="__description" v-if="showDescription === 'pay'">
-            Сало подают к столу как одну из закусок, в качестве дополнения к первым блюдам.3
+            Оплата производится курьеру наличными или картой. Выбрать вариант оплаты можно при оформлении заказа.
           </div>
         </div>
         <div class="__go-to-basket _box-gap_bg">
@@ -356,8 +372,8 @@ import Catalog from "@/components/catalog/Catalog";
 export default {
   name: 'GoodsCart',
   data: () => ({
-    sliderMain: null,
-    sliderSub: null,
+    sliderMain: {},
+    sliderSub: [],
     showDescription: 'desc',
     objFlag: false,
     heart: false,
@@ -397,7 +413,7 @@ export default {
           this.objFlag = true;
         }
       });
-      console.log(product)
+      console.log(product);
       return product;
     },
     hasVariations() {
@@ -411,7 +427,59 @@ export default {
       if (this.objFlag) {
         let props = ''
         this.product.attributes.forEach(elem => {
-          if (elem.id === 1) {
+          if (elem.id === 6) {
+            props = elem.options[0];
+          }
+        })
+        return props
+      } else {
+        return ''
+      }
+    },
+    amino() {
+      if (this.objFlag) {
+        let props = ''
+        this.product.attributes.forEach(elem => {
+          if (elem.id === 8) {
+            props = elem.options[0];
+          }
+        })
+        return props
+      } else {
+        return ''
+      }
+    },
+    fats() {
+      if (this.objFlag) {
+        let props = ''
+        this.product.attributes.forEach(elem => {
+          if (elem.id === 9) {
+            props = elem.options[0];
+          }
+        })
+        return props
+      } else {
+        return ''
+      }
+    },
+    carbo() {
+      if (this.objFlag) {
+        let props = ''
+        this.product.attributes.forEach(elem => {
+          if (elem.id === 10) {
+            props = elem.options[0];
+          }
+        })
+        return props
+      } else {
+        return ''
+      }
+    },
+    energy() {
+      if (this.objFlag) {
+        let props = ''
+        this.product.attributes.forEach(elem => {
+          if (elem.id === 11) {
             props = elem.options[0];
           }
         })
@@ -427,6 +495,10 @@ export default {
         this.$store.dispatch('product/FetchVariations', this.product.id)
         this.currentPrice = parseInt(this.product.price)
         this.weight = this.product.attributes[this.product.attributes.length - 1].options[0]
+        if (this.product.images.length > 0) {
+          this.sliderMain = this.product.images[0]
+          this.sliderSub = this.product.images.slice(1)
+        }
       }
     }
   },
@@ -756,6 +828,7 @@ export default {
 
   ._sub-title {
     color: #585858;
+    cursor: pointer;
   }
 
   .active {

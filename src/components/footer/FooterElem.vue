@@ -41,7 +41,7 @@
         </div>
         <div class="copyright">
           <a href="https://ed-webdev.pro/" target="_blank">Caйт создан командой: EVERYTHING DIGITAL</a>
-          <p>2016–2022 © ООО «КФХ Лапшино»</p>
+          <p>2016–2023 © ООО «КФХ Лапшино»</p>
         </div>
       </div>
     </div>
@@ -64,7 +64,7 @@ export default {
   width: 100%;
   height: 100%;
   margin-top: rem(72);
-  background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/footer/breather.webp") bottom no-repeat #F9F9F9;
+  background: url("http://lapshinka-api.store/lapshinkoServ/png/footer/breather.webp") bottom no-repeat #F9F9F9;
   background-position-x: 92%;
   background-size: 27%;
   padding-right: rem(16);
@@ -188,7 +188,7 @@ export default {
 }
 @media(max-width: em(509, 16)){
   .footer{
-    background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/footer/FooterMobile.webp") center right no-repeat #F9F9F9;
+    background: url("http://lapshinka-api.store/lapshinkoServ/png/footer/FooterMobile.webp") center right no-repeat #F9F9F9;
     background-position-y: 22%;
   }
   .contacts{

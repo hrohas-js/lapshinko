@@ -7,28 +7,38 @@
       </h2>
       <img src="@/assets/svg/hit.svg" alt="новости">
     </div>
-    <div class="link-container" v-if="width >=550">
-      <link-to-all></link-to-all>
+    <div class="link-container" v-if="width >= 550">
+      <link-to-all @click="goToAllNews" />
     </div>
   </div>
   <div class="choose-container">
-    <news-item v-for="item in $store.state.newsPreview.news" :news="item" :key="item.id"></news-item>
+    <news-item v-for="item in preview" :news="item" :key="item.id" />
   </div>
   <div class="link-container">
-    <link-to-all v-if="width <550"></link-to-all>
+    <link-to-all v-if="width < 550" @click="goToAllNews" />
   </div>
 </section>
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
 import NewsItem from "@/components/news/NewsItem";
 import LinkToAll from "@/components/UI/LinkToAll";
+
 export default {
   name:'NewsPreview',
   components: {LinkToAll, NewsItem},
   computed:{
-    width(){
-      return this.$store.state.displayWidth
+    ...mapState({
+      width: 'displayWidth'
+    }),
+    ...mapGetters('news', {
+      preview: 'previewNews'
+    })
+  },
+  methods: {
+    goToAllNews() {
+      this.$router.push('/news')
     }
   }
 }

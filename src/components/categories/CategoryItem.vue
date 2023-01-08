@@ -1,14 +1,19 @@
 <template>
-  <router-link to="/catalogBody" class="__item" :class="{_big:width > 1027, first:first, last:last}"
-               @mouseenter="hover = true" @mouseleave="hover = false">
+  <router-link
+      :to="product.link"
+      class="__item"
+      :class="{_big:width > 1027, first:first, last:last}"
+      @mouseenter="hover = true"
+      @mouseleave="hover = false"
+  >
     <div class="__img">
-      <img :src="product.picture" alt="новые поступления" v-if="width > 1027">
-      <img :src="product.miniImg" alt="новые поступления" v-if="width <= 1027">
+      <img v-if="width > 1027" :src="product.picture" alt="новые поступления">
+      <img v-if="width <= 1027" :src="product.miniImg" alt="новые поступления">
     </div>
-    <div class="_sub-title" :class="{color:hover && width > 1027, width:product.rating > 1}">
+    <div class="_sub-title" :class="{color: hover && width > 1027, width: product.rating > 1}">
       {{ product.name }}
     </div>
-    <div class="hover-style"></div>
+    <div class="hover-style" />
   </router-link>
 </template>
 
@@ -24,12 +29,12 @@ export default {
       return this.$store.state.displayWidth
     },
     first() {
-      if (this.product.id == 1 && this.position == 'first') {
+      if (this.product.id === '1' && this.position === 'first') {
         return true;
       }
     },
     last() {
-      if (this.product.id == 1 && this.position == 'last') {
+      if (this.product.id === '1' && this.position === 'last') {
         return true;
       }
     }

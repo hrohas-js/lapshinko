@@ -1,44 +1,50 @@
 <template>
-  <router-link to="/someNews" class="news-item" v-if="width >=550"
-           :class="{reverse:(index+1)%10 == 0, big:(index+1)%5 == 0 && width > 1300, hov:width > 1300}"
+  <router-link :to="{name: 'NewsItem', params: {id: news.id}}" class="news-item" v-if="width >=550"
+           :class="{reverse:(index+1) % 10 === 0, big:(index+1) % 5 === 0 && width > 1300, hov:width > 1300}"
            ref="big"
            :style="styleObject"
            @mouseenter="active = true"
            @mouseleave="active = false"
   >
     <div class="img-container">
-      <img :src="news.img" alt="новость">
+      <img :src="news.image" alt="новость">
       <div class="more-info" :class="{active:active && width > 1300}" >
-        <router-link to="/someNews"> Подробнее <img src="@/assets/svg/arrowRight.svg" alt="каталог"></router-link>
+        <router-link :to="{name: 'NewsItem', params: {id: news.id}}">
+          Подробнее <img src="@/assets/svg/arrowRight.svg" alt="каталог">
+        </router-link>
       </div>
       <div class="blur" :class="{active:active && width > 1300}"></div>
     </div>
     <div class="description">
-      <span class="data">{{ news.data }}</span>
-      <h2 :class="{_title:width > 1300 && (index+1)%5 == 0, '_sub-title':width <= 1300 || (index+1)%5 != 0}" class="">{{ news.title }}</h2>
+      <h2 :class="{'_title':width > 1300 && (index+1) % 5 === 0, '_sub-title':width <= 1300 || (index+1) % 5 !== 0}">
+        {{ news.title.rendered }}
+      </h2>
       <article>
-        {{ news.description }}
+        {{ smallDescription }}
       </article>
     </div>
   </router-link>
-  <router-link to="/someNews" class="news-item" v-if="width < 550">
+  <router-link :to="{name: 'NewsItem', params: {id: news.id}}" class="news-item" v-if="width < 550">
     <div class="__header">
       <div class="img-container">
-        <img :src="news.img" alt="новость">
+        <img :src="news.image" alt="новость">
       </div>
       <div class="description">
-        <span class="data">{{ news.data }}</span>
-        <h2 class="_sub-title">{{ news.title }}</h2>
+        <h2 class="_sub-title">
+          {{ news.title.rendered }}
+        </h2>
+        <span class="data">
+          {{ smallDescription }}
+        </span>
       </div>
     </div>
-    <article>
-      {{ news.description }}
-    </article>
   </router-link>
 
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   props: ['news', 'index'],
   name: 'NewsItem',
@@ -50,21 +56,25 @@ export default {
     active:false
   }),
   computed: {
-    width() {
-      return this.$store.state.displayWidth
+    ...mapState({
+      width: 'displayWidth'
+    }),
+    smallDescription() {
+      const str = this.news.content.rendered.replace(/( |<([^>]+)>)/ig, " ").substring(0, 100)
+      return str.substring(0, str.length - 3) + '...'
     }
   },
   mounted() {
-      if(this.index == 4){
+      if(this.index === 4){
         this.$store.commit('news/CLEAR_COUNT');
       }
-      if ((this.index + 1) % 5 == 0) {
+      if ((this.index + 1) % 5 === 0) {
         let count = 0;
         this.$store.commit('news/SET_COUNT');
         count = this.$store.state.news.count;
         this.$store.commit('news/SET_COUNT');
-        this.styleObject.gridRowStart = this.width>=1300 ? count: 'auto';
-        this.styleObject.gridRowEnd = this.width>=1300  ? this.$store.state.news.count : 'auto';
+        this.styleObject.gridRowStart = this.width >= 1300 ? count: 'auto';
+        this.styleObject.gridRowEnd = this.width >= 1300  ? this.$store.state.news.count : 'auto';
       }
   }
 }
@@ -76,6 +86,7 @@ export default {
 }
 .big{
   grid-column: 1 / 3;
+  max-height: rem(417);
   .img-container{
     flex: 1 1 auto;
     img{
@@ -100,8 +111,13 @@ export default {
 .news-item {
   cursor: pointer;
   flex: 1 1 50%;
-
+  max-height: rem(200);
   display: flex;
+
+  .img-container > img {
+    width: 100%;
+    object-fit: cover;
+  }
 
   img {
     height: 100%;
@@ -156,11 +172,11 @@ export default {
   flex: 1 1 50%;
   padding: rem(10) rem(8);
   background: #FFFFFF;
-  box-shadow: 0px 2px 6px rgba(21, 27, 19, 0.08);
+  box-shadow: 0 2px 6px rgba(21, 27, 19, 0.08);
 }
 
 .data {
-  font-family: 'Mulish';
+  font-family: 'Mulish', sans-serif;
   font-style: normal;
   font-weight: 600;
   font-size: rem(12);
@@ -214,7 +230,7 @@ export default {
 @media (max-width: em(549, 16)) {
   .news-item {
     flex-direction: column;
-    box-shadow: 0px 2px 6px rgb(21 27 19 / 8%);
+    box-shadow: 0 2px 6px rgb(21 27 19 / 8%);
   }
   .__header {
     display: flex;

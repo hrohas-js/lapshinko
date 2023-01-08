@@ -52,33 +52,40 @@
               class="__wish-button"
               @click="fetchLike"
           >
-            <img src="@/assets/svg/wishbutton.svg" alt="добавить в избранное" v-if="!heart">
-            <img src="@/assets/svg/activeHeart.svg" alt="добавить в избранное" v-if="heart">
+            <img v-if="!heart" src="@/assets/svg/wishbutton.svg" alt="добавить в избранное">
+            <img v-if="heart" src="@/assets/svg/activeHeart.svg" alt="добавить в избранное">
           </div>
         </div>
       </div>
     </div>
     <transition name="fade">
-      <div class="food-item _move" v-if="showMove && width > 1024 && $route.name !== 'Profile'">
+      <div
+          v-if="showMove && width > 1024 && $route.name !== 'Profile'"
+          class="food-item _move"
+      >
         <div class="__choose-container __text">
-          <div class="_mini-title">{{ item.name }}</div>
+          <div class="_mini-title">
+            {{ item.name }}
+          </div>
           <div class="__price">
             {{ item.price }} ₽/ед
           </div>
         </div>
         <div v-if="$route.name !== 'WishList'" class="__description">
-          <span v-if="this.properties !== ''">Состав: {{ this.properties }}</span>
+          <span v-if="this.properties !== ''">
+            Состав: {{ this.properties }}
+          </span>
         </div>
         <div v-if="$route.name !== 'WishList'" class="__shelf-life">
           {{ this.lifetime }}
         </div>
         <div class="__buttons">
           <div class="__wish-button" @click="fetchLike">
-            <img src="@/assets/svg/wishbutton.svg" alt="добавить в избранное" v-if="!heart">
-            <img src="@/assets/svg/activeHeart.svg" alt="добавить в избранное" v-if="heart">
+            <img v-if="!heart" src="@/assets/svg/wishbutton.svg" alt="добавить в избранное">
+            <img v-if="heart" src="@/assets/svg/activeHeart.svg" alt="добавить в избранное">
           </div>
           <div class="__function-buttons">
-            <router-link :to="{name:'GoodsCard',params:{id:item.id}}" class="details __button">
+            <router-link :to="{name: 'GoodsCard', params:{id: item.id}}" class="details __button">
               Детали
             </router-link>
             <div class="in-basket __button" @click="addToCart">
@@ -149,7 +156,7 @@ export default {
     addToCart() {
       this.$store.dispatch('cart/addToCart', {
         product_id: this.item.id,
-        variation_id: this.item.id + 1,
+        variation_id: this.item.id,
         quantity: 1,
         name: this.item.name,
         price: parseInt(this.item.price)

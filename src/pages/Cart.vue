@@ -26,6 +26,9 @@ export default {
     ...mapGetters('cart', {
       length: 'cartLength'
     })
+  },
+  created() {
+    console.log(this.$store.state.cart.cart)
   }
 }
 </script>

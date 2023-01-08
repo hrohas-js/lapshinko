@@ -9,24 +9,25 @@
       </div>
     </div>
     <div class="wrapper  news-container _box-gap_sm">
-      <news-item v-for="(item, index) in $store.state.news.news" :news="item" :key="item.id" :index="index"></news-item>
-    </div>
-    <div class="download-button _button _button_mobile" v-if="width <= 768">
-        загрузить еще 4
+      <news-item v-for="(item, index) in news" :news="item" :key="item.id" :index="index" />
     </div>
   </main>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import NewsItem from "@/components/news/NewsItem";
 
 export default {
   name: 'News',
   components: { NewsItem },
   computed:{
-    width(){
-      return this.$store.state.displayWidth
-    }
+    ...mapState({
+      width: 'displayWidth'
+    }),
+    ...mapState('news', {
+      news: 'news'
+    })
   }
 }
 </script>
@@ -46,12 +47,11 @@ main {
 }
 
 .page-banner {
-  background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/news/newsBanner.webp") right;
+  background: url("http://lapshinka-api.store/lapshinkoServ/png/news/newsBanner.webp") right;
   background-size: cover;
 }
 
 .news-container {
-  height: rem(1870);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: rem(30);
@@ -95,7 +95,7 @@ main {
 }
 @media (max-width: em(520, 16)){
   .page-banner{
-    background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/news/newsBannerMob.webp") right no-repeat;
+    background: url("http://lapshinka-api.store/lapshinkoServ/png/news/newsBannerMob.webp") right no-repeat;
     background-size: cover;
   }
 }

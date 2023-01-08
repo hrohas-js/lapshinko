@@ -2,38 +2,12 @@ export const Profile = {
     state: () => ({
         user: sessionStorage.getItem('user') != null ? JSON.parse(sessionStorage.getItem('user')) : {},
         userCurrentAction: 'profile',
-        ordersMobile: [
-            {
-                id: 'ZK-271221',
-                data: '15/12/22',
-                count: '24 590',
-                status: 'Одобрен',
-                comment: 'комментарий'
-            },
-            {
-                id: 'ZK-271222',
-                data: '15/12/22',
-                count: '24 590',
-                status: 'Одобрен',
-                comment: 'комментарий'
-            },
-            {
-                id: 'ZK-271223',
-                data: '15/12/22',
-                count: '24 590',
-                status: 'Одобрен',
-                comment: 'комментарий'
-            },
-            {
-                id: 'ZK-271224',
-                data: '15/12/22',
-                count: '24 590',
-                status: 'Одобрен',
-                comment: 'комментарий'
-            },
-        ],
+        orders: [],
+        ordersID: [],
+        currentOrder: {},
         showInfoOrder: false,
         showRegistration: false,
+        thanksShow: false
     }),
     getters: {
         isUserExist(state) {
@@ -81,9 +55,39 @@ export const Profile = {
         SET_USER(state, user) {
             state.user = user;
             console.log(state.user)
+        },
+        SET_ORDERS_ID(state, ordersID) {
+            state.ordersID = ordersID
+        },
+        ADD_TO_ORDERS(state, item) {
+            state.orders.push(item)
+        },
+        ADD_TO_ORDERS_ID(state, item) {
+            state.ordersID.push(item)
+        },
+        CLEAN_ORDERS(state) {
+            state.orders = []
+            state.ordersID = []
+        },
+        SET_CURRENT_ORDER(state, order) {
+            state.currentOrder = order
+        },
+        SET_SHOW_THANKS(state) {
+            state.thanksShow = !state.thanksShow
         }
     },
     actions: {
+        async fetchOrders({state, rootState, commit}) {
+            if (Object.keys(state.user).length > 0 && state.user.meta.orders.length > 0) {
+                commit('SET_ORDERS_ID', state.user.meta.orders)
+                for(let i = 0; i < state.ordersID.length; i++) {
+                    const response = await rootState.axiosInstance.get('wc/v3/orders/'+ state.ordersID[i].id +'/?consumer_key=ck_788ce484e684b9e29f779dc449ec3ce7a1987eb6&consumer_secret=cs_ffa696e0edf8a20d8837418cc57b63c1331c7527')
+                    response.data.comment = state.ordersID[i].comment
+                    commit('ADD_TO_ORDERS', response.data)
+                }
+            }
+            console.log(state.orders)
+        },
         async getCurrentUser({rootState, commit, dispatch}, id) {
             const response = await rootState.axiosInstance.get('wp/v2/users/' + id, {
                 headers: {
@@ -98,6 +102,7 @@ export const Profile = {
             } else if (localStorage.getItem('cart_' + response.data.name) !== null) {
                 dispatch('cart/setCart', null, {root: true})
             }
+            dispatch('fetchOrders')
         },
         async Registration({rootState, commit}, registration) {
             const username = registration.email.split('@')[0];
@@ -165,6 +170,35 @@ export const Profile = {
                     avatar_url: response.data.url
                 }
             })
+        },
+        async createOrderComment({rootState, commit}, commentInfo) {
+            await rootState.axiosInstance.post('wc/v3/orders/'+ commentInfo.id +'/notes/?consumer_key=ck_788ce484e684b9e29f779dc449ec3ce7a1987eb6&consumer_secret=cs_ffa696e0edf8a20d8837418cc57b63c1331c7527', commentInfo.data)
+        },
+        async createOrder({state, rootState, commit, dispatch}, orderInfo) {
+            const response = await rootState.axiosInstance.post('wc/v3/orders/?consumer_key=ck_788ce484e684b9e29f779dc449ec3ce7a1987eb6&consumer_secret=cs_ffa696e0edf8a20d8837418cc57b63c1331c7527', orderInfo.order)
+            if (response.status === 201 && response.statusText === 'Created') {
+
+                response.data.comment = orderInfo.comment
+                if (orderInfo.comment.length > 0) {
+                    dispatch('createOrderComment', {
+                        id: response.data.id,
+                        data: {
+                            note: orderInfo.comment
+                        }
+                    })
+                }
+                commit('ADD_TO_ORDERS_ID', {
+                    id: response.data.id,
+                    comment: orderInfo.comment
+                })
+                commit('ADD_TO_ORDERS', response.data)
+                commit('SET_SHOW_THANKS')
+                dispatch('updateUser', {
+                    meta: {
+                        orders: state.ordersID
+                    }
+                })
+            }
         }
     },
     namespaced: true

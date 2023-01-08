@@ -1,11 +1,13 @@
 <template>
-  <div class="cart-item" :class="{'cart-item__body': width <770}">
+  <div class="cart-item" :class="{'cart-item__body': width < 770}">
     <div class="cart-item__image">
       <img src="@/assets/png/GoodsCart/GoodsBig.webp" alt="good">
     </div>
-    <div class="cart-item__content" :class="{row:$route.name == 'Cart' && width >=770}">
+    <div class="cart-item__content" :class="{row:$route.name === 'Cart' && width >= 770}">
       <div>
-        <div class="_mini-title">{{ item.name }}</div>
+        <div class="_mini-title">
+          {{ item.name }}
+        </div>
       </div>
       <div class="controls-summary">
         <div class="controls">
@@ -19,12 +21,16 @@
             <img src="@/assets/svg/plus.svg" alt="plus">
           </div>
         </div>
-        <div class="summary _sub-title" v-if="width > 768">{{ totalPrice }} ₽</div>
+        <div v-if="width > 768" class="summary _sub-title">
+          {{ totalPrice }} ₽
+        </div>
         <div class="delete" @click="deleteFromCart">
           <img src="@/assets/svg/delete.svg" alt="delete">
         </div>
       </div>
-      <div class="summary _sub-title" v-if="width <= 768">{{ totalPrice }} ₽</div>
+      <div v-if="width <= 768" class="summary _sub-title">
+        {{ totalPrice }} ₽
+      </div>
     </div>
   </div>
 </template>

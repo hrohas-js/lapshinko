@@ -13,7 +13,7 @@ module.exports = defineConfig({
             devServer: {
                 proxy: {
                     '/wp-json': {
-                        target: 'https://dreamteam-webdev.ru',
+                        target: 'http://lapshinka-api.store',
                         secure: false,
                         changeOrigin: true
                     }

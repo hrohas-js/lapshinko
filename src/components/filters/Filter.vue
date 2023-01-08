@@ -1,72 +1,122 @@
 <template>
   <div class="filter">
-    <div class="go-beak filter_wrapper">
-      <router-link to="/catalog"><img src="@/assets/svg/arrow-left.svg" alt="назад в каталог">
-        <span>Назад в каталог</span></router-link>
+    <div class="go-back filter_wrapper">
+      <router-link to="/catalog">
+        <img src="@/assets/svg/arrow-left.svg" alt="назад в каталог">
+        <span>
+          Назад в каталог
+        </span>
+      </router-link>
     </div>
     <div class="filter_wrapper">
       <div class="choose-elem">
-        <h2 class="_sub-title">категории</h2>
+        <h2 class="_sub-title">
+          категории
+        </h2>
       </div>
       <ul class="offer-position eat">
-        <li v-for="item in categories" :key="item.id" :class="{active:item.id == $route.params.categoryId}">
-          <router-link :to="{ name: `CatalogBody`, params: { categoryId:item.id, subcategoryId:'all'}}">{{
-              item.name
-            }}
+        <li
+            v-for="item in categories"
+            :key="item.id"
+            :class="{active:item.id === parseInt($route.params.categoryId)}"
+        >
+          <router-link :to="{ name: `CatalogBody`, params: { categoryId: item.id, subcategoryId:'all'}}">
+            {{ item.name }}
           </router-link>
         </li>
       </ul>
       <div class="chose-offer">
         <div class="choose-elem">
-          <h2 class="_sub-title">предложения</h2>
+          <h2 class="_sub-title">
+            предложения
+          </h2>
         </div>
       </div>
       <ul class="offer-position">
         <li>
           <div class="offer">
-            <input type="radio" id="sale" name="offer" v-model="options" value="sale" class="custom-radio"
-                   @change="sendOptions">
-            <label for="sale">Со скидкой</label>
+            <input
+                type="radio"
+                id="sale"
+                name="offer"
+                v-model="options"
+                value="sale"
+                class="custom-radio"
+                @change="sendOptions"
+            />
+            <label for="sale">
+              Со скидкой
+            </label>
           </div>
           <span class="count-position">(300)</span>
         </li>
         <li>
           <div class="offer">
-            <input type="radio" id="new" name="offer" v-model="options" value="new" class="custom-radio"
-                   @change="sendOptions">
-            <label for="new">Новинка</label>
+            <input
+                type="radio"
+                id="new"
+                name="offer"
+                v-model="options"
+                value="new"
+                class="custom-radio"
+                @change="sendOptions"
+            />
+            <label for="new">
+              Новинка
+            </label>
           </div>
           <span class="count-position">(300)</span>
         </li>
         <li>
           <div class="offer">
-            <input type="radio" id="promo" name="offer" v-model="options" value="promo" class="custom-radio"
-                   @change="sendOptions">
-            <label for="promo">Aкци</label>
+            <input
+                type="radio"
+                id="promo"
+                name="offer"
+                v-model="options"
+                value="promo"
+                class="custom-radio"
+                @change="sendOptions"
+            />
+            <label for="promo">
+              Aкция
+            </label>
           </div>
           <span class="count-position">(300)</span>
         </li>
       </ul>
       <div class="chose-offer">
         <div class="choose-elem">
-          <h2 class="_sub-title">Цена,₽</h2>
+          <h2 class="_sub-title">
+            Цена,₽
+          </h2>
         </div>
         <div class="range-slider">
           <div class="filter-container">
             <div class="show-filter">
-              <input type="number" class="show-filter__elem"
-                     v-model.number="minValue"
-                     @keydown="focus"
-                     @blur="FilterValidatorMin">
-              <span class="show-filter__text">от</span>
+              <input
+                  type="number"
+                  class="show-filter__elem"
+                  v-model.number="minValue"
+                  @keydown="focus"
+                  @blur="FilterValidatorMin"
+              />
+              <span class="show-filter__text">
+                от
+              </span>
             </div>
             <span>-</span>
             <div class="show-filter">
-              <input type="number" class="show-filter__elem"
-                     v-model.number="maxValue"
-                     @keydown="focus"
-                     @blur="FilterValidatorMax">
-              <span class="show-filter__text">до</span>
+              <input
+                  type="number"
+                  class="show-filter__elem"
+                  v-model.number="maxValue"
+                  @keydown="focus"
+                  @blur="FilterValidatorMax"
+              />
+              <span class="show-filter__text">
+                до
+              </span>
             </div>
           </div>
           <Slider
@@ -120,7 +170,7 @@ export default {
       this.maxValue = newValue
       this.value[1] = newValue;
     },
-    minValue:function (newValue){
+    minValue: function (newValue){
       this.$store.commit('catalogSettings/SET_MIN_PRICE',newValue);
     },
     maxValue: function (newValue){
@@ -153,12 +203,12 @@ export default {
       }
     },
     focus(e) {
-      if (e.keyCode == '13') {
+      if (e.keyCode === '13') {
         e.target.blur()
       }
     },
     sendOptions() {
-      if (this.options != '') {
+      if (this.options !== '') {
         this.$store.commit('catalogSettings/SЕT_PARAMS', this.options);
       }
     },
@@ -183,7 +233,7 @@ export default {
 .filter {
   flex: 1 1 20%;
   background: #F9F9F9;
-  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  box-shadow: 0 5px 12px rgba(16, 20, 15, 0.12);
   height: fit-content;
 }
 
@@ -191,7 +241,7 @@ export default {
   padding: rem(19) rem(28) rem(41) rem(32);
 }
 
-.go-beak {
+.go-back {
   border-bottom: 4px dotted #D9AC94;
 
   a {
@@ -285,7 +335,7 @@ export default {
 }
 
 .custom-radio:checked + label::before {
-  background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/filter/filter_beakground.svg") center center no-repeat;
+  background: url("http://lapshinka-api.store/lapshinkoServ/png/filter/filter_beakground.svg") center center no-repeat;
   background-size: rem(6.67);
 }
 
@@ -301,7 +351,7 @@ export default {
 }
 
 .show-filter__elem {
-  font-family: 'Mulish';
+  font-family: 'Mulish', sans-serif;
   max-width: rem(135);
   border: 1px solid #C0C0C0;
   padding: rem(10) rem(6) rem(10) rem(49);

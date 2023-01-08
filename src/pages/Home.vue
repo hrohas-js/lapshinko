@@ -1,13 +1,13 @@
 <template>
   <main>
-    <offer></offer>
+    <offer />
     <div class="wrapper">
-      <catalog :title="'new'"></catalog>
-      <Categories :title="'popular'"></Categories>
+      <catalog :title="'new'" />
+      <Categories :title="'popular'" />
     </div>
-    <about-us-banner></about-us-banner>
+    <about-us-banner />
     <div class="wrapper">
-      <news-preview></news-preview>
+      <news-preview />
     </div>
   </main>
 </template>

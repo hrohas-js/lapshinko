@@ -2,26 +2,40 @@
   <div class="orders-mobile">
     <div class="order-mobile__main">
       <div class="__header" @click="showTable = !showTable">
-        <span :class="{active:showTable}">{{ order.id }}</span> <img src="@/assets/svg/arrow-down.svg" alt="посмотреть заказ"
-                                         :class="{rotate:showTable}">
+        <span :class="{active:showTable}">
+          {{ order.id }}
+        </span>
+        <img src="@/assets/svg/arrow-down.svg" alt="посмотреть заказ" :class="{rotate:showTable}">
       </div>
       <transition name="slide-fade">
         <div class="__table" v-if="showTable">
           <div class="__elem">
-            <h2>Дата заказа</h2>
-            <span>{{ order.data }}</span>
+            <h2>
+              Дата заказа
+            </h2>
+            <span>
+              {{ order.date_created.split('T')[0] }}
+            </span>
           </div>
           <div class="__elem">
-            <h2>Сумма</h2>
-            <span>{{ order.count }}</span>
+            <h2>
+              Сумма
+            </h2>
+            <span>
+              {{ parseInt(order.total) }} ₽
+            </span>
           </div>
           <div class="__elem">
-            <h2>Статус</h2>
+            <h2>
+              Статус
+            </h2>
             <div class="comment">
-              <span>{{ order.status }}</span> <span>{{ order.comment }}</span>
+              <span>
+                {{ order.status === 'pending' ? 'Выполняется' : 'Выполнен' }}
+              </span>
             </div>
           </div>
-          <div class="__more" @click="openModalInfo">
+          <div class="__more" @click="openModalInfo(order)">
             подробнее
           </div>
         </div>
@@ -42,7 +56,8 @@ export default {
     showTable: false
   }),
   methods:{
-    openModalInfo(){
+    openModalInfo(item){
+      this.$store.commit('profile/SET_CURRENT_ORDER', item);
       this.$store.commit('profile/SET_SHOW_INFO_ORDER',true);
     }
   }
@@ -75,7 +90,7 @@ export default {
   justify-content: space-between;
   padding: rem(8) rem(28) rem(8) rem(24);
   background: #F9F9F9;
-  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  box-shadow: 0 5px 12px rgba(16, 20, 15, 0.12);
 }
 .active{
   color: #629C42;
@@ -88,7 +103,7 @@ export default {
 .__table{
   padding: rem(16) 0;
   background: #FFFFFF;
-  box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
+  box-shadow: 0 5px 12px rgba(16, 20, 15, 0.12);
 }
 .__elem{
   padding-left: rem(8);

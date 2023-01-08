@@ -185,7 +185,7 @@
                               name="pay"
                               id="cash"
                               class="custom-radio"
-                              value="cash"
+                              value="cod"
                               v-model="optionPay.options"
                           />
                           <label for="cash">
@@ -201,7 +201,7 @@
                               name="pay"
                               id="bankСard"
                               class="custom-radio"
-                              value="card"
+                              value="cheque"
                               v-model="optionPay.options"
                           />
                           <label for="bankСard">
@@ -223,7 +223,7 @@
               <h2>
                 Комментарий
               </h2>
-              <textarea name="" id="" maxlength="1000"></textarea>
+              <textarea maxlength="1000" v-model="comment" />
               <div class="attention">
                 <span>не более 1 000 символов</span>
               </div>
@@ -272,7 +272,7 @@
       </div>
     </div>
   </main>
-  <div class="modal" v-if="showThanks">
+  <div class="modal" v-if="thanks">
     <div class="thanks">
       <div class="close" @click="close">
         <img src="@/assets/svg/closButton.svg" alt="Закрыть окно">
@@ -311,21 +311,25 @@ export default {
       action: false,
       show: false
     },
-    showThanks: false,
     address: {
       name: '',
       surname: '',
       addressValue: '',
       email: '',
       phone: ''
-    }
+    },
+    comment: ''
   }),
   computed: {
     ...mapState({
-      width: 'displayWidth'
+      width: 'displayWidth',
     }),
     ...mapState('cart', {
-      freeDelivery: 'freeDeliveryCostCart'
+      freeDelivery: 'freeDeliveryCostCart',
+      cart: 'cart'
+    }),
+    ...mapState('profile', {
+      thanks: 'thanksShow'
     }),
     ...mapGetters('cart', {
       total: 'cartTotal',
@@ -393,11 +397,82 @@ export default {
     },
     goToPayment() {
       if (this.confirmCheckout) {
-        this.showThanks = true;
+        let order = {
+          payment_method: this.optionPay.options,
+          payment_method_title: '',
+          billing: {
+            city: 'Moscow',
+            state: 'MOS',
+            country: 'RU'
+          },
+          shipping: {
+            city: 'Moscow',
+            state: 'MOS',
+            country: 'RU'
+          },
+          line_items: [],
+          shipping_lines: []
+        }
+        if (this.address.name !== '') {
+          order.billing.first_name = this.address.name
+          order.shipping.first_name = this.address.name
+        }
+        if (this.address.surname !== '') {
+          order.billing.last_name = this.address.surname
+          order.shipping.last_name = this.address.surname
+        }
+        if (this.address.addressValue !== '') {
+          order.billing.address_1 = this.address.addressValue
+          order.shipping.address_1 = this.address.addressValue
+        }
+        if (this.address.email !== '') {
+          order.billing.email = this.address.email
+        }
+        if (this.address.phone !== '') {
+          order.billing.phone = this.address.phone
+        }
+        if (this.optionPay.options === 'cheque') {
+          order.payment_method_title = 'Чековые платежи'
+        }
+        if (this.optionPay.options === 'cod') {
+          order.payment_method_title = 'Оплата при доставке'
+        }
+        this.cart.forEach(elem => {
+          order.line_items.push({
+            product_id: elem.product_id,
+            variation_id: elem.variation_id,
+            quantity: elem.quantity,
+            name: elem.name,
+            price: elem.price
+          })
+        })
+        if (this.optionDelivery.options === 'self') {
+          order.shipping_lines.push({
+            method_id: 'local_pickup',
+            method_title: 'Самовывоз'
+          })
+        }
+        if (this.optionDelivery.options === 'cura' && this.deliveryCost > 0) {
+          order.shipping_lines.push({
+            method_id: 'flat_rate',
+            method_title: 'Единая ставка',
+            total: this.deliveryCost.toString()
+          })
+        } else if (this.optionDelivery.options === 'cura' && this.deliveryCost === 0) {
+          order.shipping_lines.push({
+            method_id: 'free_shipping',
+            method_title: 'Бесплатная доставка'
+          })
+        }
+        this.$store.dispatch('profile/createOrder', {
+          order: order,
+          comment: this.comment
+        })
       }
     },
     close() {
-      this.showThanks = false;
+      this.$store.commit('profile/SET_SHOW_THANKS')
+      this.$router.push('/')
     }
   }
 }
@@ -595,7 +670,7 @@ export default {
 .custom-radio:checked + label::before {
   cursor: pointer;
   border: 2px solid #629C42;
-  background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/profile/legal.svg") center no-repeat;
+  background: url("http://lapshinka-api.store/lapshinkoServ/png/profile/legal.svg") center no-repeat;
 }
 
 .checkout-textarea {

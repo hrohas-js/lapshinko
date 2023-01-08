@@ -11,63 +11,22 @@
         <div class="__table-title__elem">Статус</div>
         <div></div>
       </div>
-      <div class="__table-elem">
-        <div class="__item">ZK-271221</div>
-        <div class="__item">15/12/22</div>
-        <div class="__item">24 590 ₽</div>
+      <div v-for="item in orders" :key="item.id" class="__table-elem">
+        <div class="__item">
+          {{ item.id }}
+        </div>
+        <div class="__item">
+          {{ item.date_created.split('T')[0] }}
+        </div>
+        <div class="__item">
+          {{ parseInt(item.total) }} ₽
+        </div>
         <div class="__item comment">
-          <span>Одобрен</span>
-          <span class="comment__item">(комментарий)</span>
+          <span>
+            {{ item.status === 'pending' ? 'Выполняется' : 'Выполнен' }}
+          </span>
         </div>
-        <div class="__item" @click="openModalInfo">
-          <span class="more">Подробнее</span>
-        </div>
-      </div>
-      <div class="__table-elem">
-        <div class="__item">ZK-271221</div>
-        <div class="__item">15/12/22</div>
-        <div class="__item">24 590 ₽</div>
-        <div class="__item comment">
-          <span>Одобрен</span>
-          <span class="comment__item">(комментарий)</span>
-        </div>
-        <div class="__item" @click="openModalInfo">
-          <span class="more">Подробнее</span>
-        </div>
-      </div>
-      <div class="__table-elem">
-        <div class="__item">ZK-271221</div>
-        <div class="__item">15/12/22</div>
-        <div class="__item">24 590 ₽</div>
-        <div class="__item comment">
-          <span>Одобрен</span>
-          <span class="comment__item">(комментарий)</span>
-        </div>
-        <div class="__item" @click="openModalInfo">
-          <span class="more">Подробнее</span>
-        </div>
-      </div>
-      <div class="__table-elem">
-        <div class="__item">ZK-271221</div>
-        <div class="__item">15/12/22</div>
-        <div class="__item">24 590 ₽</div>
-        <div class="__item comment">
-          <span>Одобрен</span>
-          <span class="comment__item">(комментарий)</span>
-        </div>
-        <div class="__item" @click="openModalInfo">
-          <span class="more">Подробнее</span>
-        </div>
-      </div>
-      <div class="__table-elem">
-        <div class="__item">ZK-271221</div>
-        <div class="__item">15/12/22</div>
-        <div class="__item">24 590 ₽</div>
-        <div class="__item comment">
-          <span>Одобрен</span>
-          <span class="comment__item">(комментарий)</span>
-        </div>
-        <div class="__item" @click="openModalInfo">
+        <div class="__item" @click="openModalInfo(item)">
           <span class="more">Подробнее</span>
         </div>
       </div>
@@ -76,12 +35,20 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import OrderModal from "@/components/profile/modal/OrderModal";
+
 export default {
   name: 'Orders',
   components: {OrderModal},
+  computed: {
+    ...mapState('profile', {
+      orders: 'orders'
+    })
+  },
   methods:{
-    openModalInfo(){
+    openModalInfo(order){
+      this.$store.commit('profile/SET_CURRENT_ORDER', order)
       this.$store.commit('profile/SET_SHOW_INFO_ORDER',true);
     }
   }

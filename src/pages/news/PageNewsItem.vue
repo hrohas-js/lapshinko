@@ -2,90 +2,90 @@
   <main>
     <div class="wrapper">
       <div class="section-header">
-        <h1 class="_title">
-          Новые позиции в каталоге
+        <h1 v-if="!isCurrentItemEmpty" class="_title">
+          {{ current.title.rendered }}
         </h1>
       </div>
     </div>
-    <div class="banner">
-      <div class="wrapper">
-        <article class="section-banner">
-          <p>КФХ Лапшино базируется на производстве чистой экологической сельскохозяйственной продукции. Все сырье
-            собственного производства - от зерна до мясокомбината.</p>
-          <p>"Наша главная цель – жить и работать на селе для своей семьи и людей, поэтому мы и стараемся возродить
-            крестьянские традиции Руси на нашем небольшом хуторе".</p>
-          <p>Миссия: “Мы предлагаем Вам то, что едим сами!"</p>
-        </article>
-      </div>
+    <div v-if="!isCurrentItemEmpty" class="banner">
+      <img :src="current.image" alt="image">
     </div>
     <div class="wrapper">
-      <div class="container">
-        <article class="text">
-          <p>Наша ферма находится в Тверской области в экологически чистом районе. В своем хозяйстве мы выращиваем
-            коров, свиней, овец и кур.
-            <br>
-            Мы не являемся крупным сельхозпроизводителем, поэтому к каждому обитателю нашей фермы относимся с особым
-            вниманием - кормим кормами, которые сами же и выращиваем, обеспечиваем должный уход и заботу.
-            Наверное поэтому наши продукты необычайно вкусные и не сравнятся с тем, что продается в магазинах.</p>
-          <p>
-            Наша ферма находится в Тверской области в экологически чистом районе. В своем хозяйстве мы выращиваем коров,
-            свиней, овец и кур.
-            <br>
-            Мы не являемся крупным сельхозпроизводителем, поэтому к каждому обитателю нашей фермы относимся с особым
-            вниманием - кормим кормами, которые сами же и выращиваем, обеспечиваем должный уход и заботу.
-            <br>
-            Наверное поэтому наши продукты необычайно вкусные и не сравнятся с тем, что продается в магазинах.
-          </p>
-          <p>Наша ферма находится в Тверской области в экологически чистом районе. В своем хозяйстве мы выращиваем
-            коров, свиней, овец и кур.
-            <br>
-            Мы не являемся крупным сельхозпроизводителем, поэтому к каждому обитателю нашей фермы относимся с особым
-            вниманием - кормим кормами, которые сами же и выращиваем, обеспечиваем должный уход и заботу.
-            <br>
-            Наверное поэтому наши продукты необычайно вкусные и не сравнятся с тем, что продается в магазинах.</p>
-        </article>
+      <div v-if="!isCurrentItemEmpty" class="container">
+        <article class="text" v-html="current.content.rendered" />
       </div>
     </div>
     <div :class="{wrapper:width>=770}">
-      <section class="container about-product">
-        <div class="picture">
-          <img src="@/assets/webp/news/someNews/somNews.webp" alt="новость">
-        </div>
-        <div class="description" :class="{wrapper:width<=769}">
-          <h2 class="_sub-title">Помимо скотоводства и птицеводства мы также возделываем картофель и другие овощи.</h2>
-          <p>На нашем подворье содержатся молочные и мясные породы коров, овцы, свиньи и куры. Мы полностью обеспечиваем
-            себя сами - механизированной техникой возделываем картофель, сеем зерновые, заготавливаем сено. </p>
-          <p>В отдельном помещении создана молочная комната, где по бабушкиным рецептам сама хозяйка готовит молочную
-            вкусность. В 2017 году построили отдельное здание под переработку мясной продукции и сегодня организовали
-            производство мясных продуктов из собственного сырья.</p>
-          <p>В отдельном помещении создана молочная комната, где по бабушкиным рецептам сама хозяйка готовит молочную
-            вкусность. В 2017 году построили отдельное здание под переработку мясной продукции и сегодня организовали
-            производство мясных продуктов из собственного сырья.</p>
-        </div>
-      </section>
       <div class="go-up" v-if="width<=769" @click="scrollTo()">
         <img src="@/assets/svg/arrowUp.svg" alt="в начало новости">
       </div>
       <div class="button-navigation">
-        <div class="button _button _button_disable" v-if="width>=770">Предыдущая новость</div>
-        <div class="button _button">Следующая новость</div>
-        <div class="_link" v-if="width<=769">Назад к списку</div>
+        <div
+            v-if="width>=770 && !isPrevItemEmpty"
+            class="button _button _button_disable"
+            @click="goToPrev"
+        >
+          Предыдущая новость
+        </div>
+        <div
+            v-if="!isNextItemEmpty"
+            class="button _button"
+            @click="goToNext"
+        >
+          Следующая новость
+        </div>
+        <div v-if="width <= 769" class="_link">
+          Назад к списку
+        </div>
       </div>
     </div>
   </main>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: 'PageNewsItem',
   computed: {
-    width() {
-      return this.$store.state.displayWidth
+    ...mapState({
+      width: 'displayWidth'
+    }),
+    ...mapState('news', {
+      current: 'currentNews',
+      prev: 'prevNews',
+      next: 'nextNews'
+    }),
+    isCurrentItemEmpty() {
+      return Object.keys(this.current).length === 0
+    },
+    isPrevItemEmpty() {
+      return Object.keys(this.prev).length === 0
+    },
+    isNextItemEmpty() {
+      return Object.keys(this.next).length === 0
+    },
+    newsID() {
+      return parseInt(this.$route.params.id)
     }
+  },
+  watch: {
+    newsID: function (newValue) {
+      this.$store.commit('news/SET_CURRENT_NEWS', newValue)
+    }
+  },
+  created() {
+    this.$store.commit('news/SET_CURRENT_NEWS', this.newsID)
   },
   methods:{
     scrollTo(){
       window.scrollTo({ top: 0, behavior: 'smooth' })
+    },
+    goToPrev() {
+      this.$router.push({name: 'NewsItem', params: {id: this.prev.id}})
+    },
+    goToNext() {
+      this.$router.push({name: 'NewsItem', params: {id: this.next.id}})
     }
   }
 }
@@ -93,7 +93,12 @@ export default {
 
 <style scoped lang="scss">
 .banner {
-  background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/news/newsItem/pageNewsItemBanner.webp");
+  height: rem(300);
+  overflow: hidden;
+  img {
+    width: 100%;
+    object-fit: cover;
+  }
 }
 
 p {
@@ -133,30 +138,6 @@ p {
   margin-bottom: rem(31);
 }
 
-.picture {
-  img {
-    width: 100%;
-  }
-}
-
-.picture, .description {
-  flex: 1 1 50%;
-}
-
-.description {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-
-  p {
-    margin-top: rem(24);
-  }
-
-  p:nth-child(2) {
-    margin-top: 0;
-  }
-}
-
 .button-navigation {
   display: flex;
   justify-content: center;
@@ -181,21 +162,12 @@ p {
   ._sub-title {
     margin-bottom: calc(1rem + (31 - 16) * ((100vw - 48.125rem) / (1300 - 770)));
   }
-  .description {
-    p {
-      margin-top: calc(0.625rem + (24 - 10) * ((100vw - 48.125rem) / (1300 - 770)));
-    }
-  }
   .button-navigation{
     margin-top: calc(1.9375rem + (82 - 31) * ((100vw - 48.125rem) / (1300 - 770)));
   }
 }
 
 @media (max-width: em(769, 16)) {
-  .banner {
-    background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/news/newsItem/pageNewsItemBannerMob.webp") no-repeat;
-    background-size: cover;
-  }
   .text {
     p {
       margin-top: rem(16)
@@ -206,11 +178,6 @@ p {
   }
   ._sub-title {
     margin-bottom: rem(16)
-  }
-  .description{
-    p {
-      margin-top: rem(10)
-    }
   }
   .button-navigation{
     flex-direction: column;

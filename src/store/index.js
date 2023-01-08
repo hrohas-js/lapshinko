@@ -58,7 +58,7 @@ export default createStore({
                 dispatch('catalog/FetchCatalog');
                 dispatch('category/FetchCategories');
             });
-        },
+        }
     },
     modules: {
         category: Category,

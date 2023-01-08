@@ -130,7 +130,7 @@ export default {
 }
 
 .why-we {
-  background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/offer/offer.webp") center top no-repeat #F9F9F9;
+  background: url("http://lapshinka-api.store/lapshinkoServ/png/offer/offer.webp") center top no-repeat #F9F9F9;
   box-shadow: 0px 5px 12px rgba(16, 20, 15, 0.12);
   padding: rem(29) 0 rem(45) 0;
 }

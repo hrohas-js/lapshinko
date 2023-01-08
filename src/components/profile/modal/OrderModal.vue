@@ -1,30 +1,17 @@
 <template>
   <div class="modal">
     <div class="modal__table">
-      <h1 class="_title">Заказ ZK271221</h1>
+      <h1 class="_title">Заказ {{ order.id }}</h1>
       <div class="main__table">
         <div class="order">
-          <div class="catalog-info-container">
-            <CatalogItem></CatalogItem>
+          <div v-for="item in order.line_items" :key="item.id" class="catalog-info-container">
+            <CatalogItem :item="item" />
             <div class="count-price">
               <div class="weight">
-                1кг
+                {{ item.quantity }}шт
               </div>
               <div class="price _sub-title">
-                420,00 ₽
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="order">
-          <div class="catalog-info-container">
-            <CatalogItem></CatalogItem>
-            <div class="count-price">
-              <div class="weight">
-                1кг
-              </div>
-              <div class="price _sub-title">
-                420,00 ₽
+                {{ parseInt(item.total) }} ₽
               </div>
             </div>
           </div>
@@ -33,48 +20,73 @@
       <div class="modal-info">
         <div class="modal-info__container">
           <div class="__order-info">
-            <span class="_span_color ">Сумма заказа:</span>
-            <span class="_start _span_color _count">840,00 ₽</span>
-            <span class="_span_color">Стоимость доставки:</span>
-            <span class="_start _span_color _count">600,00 ₽</span>
-            <span class="_span_color ">Итого: </span>
-            <span class="_title">1440,00 ₽</span>
+            <span class="_span_color ">
+              Сумма заказа:
+            </span>
+            <span class="_start _span_color _count">
+              {{ parseInt(order.total) - parseInt(order.shipping_total) }} ₽
+            </span>
+            <span class="_span_color">
+              Стоимость доставки:
+            </span>
+            <span class="_start _span_color _count">
+              {{ parseInt(order.shipping_total) }} ₽
+            </span>
+            <span class="_span_color ">
+              Итого:
+            </span>
+            <span class="_title">
+              {{ parseInt(order.total) }} ₽
+            </span>
           </div>
         </div>
         <div class="modal-info__table">
           <div class="modal-info__item">
-            <span class="modal-info__title _border">Дата заказа</span>
-            <span class="modal-info__text">15.12.22</span>
+            <span class="modal-info__title _border">
+              Дата заказа
+            </span>
+            <span class="modal-info__text">
+              {{ order.date_created.split('T')[0] }}
+            </span>
           </div>
           <div class="modal-info__item">
-            <span class="modal-info__title _border">Способ доставки</span>
-            <span class="modal-info__text">Курьер</span>
+            <span class="modal-info__title _border">
+              Способ доставки
+            </span>
+            <span class="modal-info__text">{{ order.shipping_lines[0].method_title }}</span>
           </div>
           <div class="modal-info__item">
-            <span class="modal-info__title _border">Адрес доставки</span>
-            <span class="modal-info__text">г. Москва, ул. Зенитная, д.10</span>
+            <span class="modal-info__title _border">
+              Адрес доставки
+            </span>
+            <span class="modal-info__text">
+              {{ order.shipping.address_1.length > 0 ? order.shipping.address_1 : '-' }}
+            </span>
           </div>
           <div class="modal-info__item">
-            <span class="modal-info__title _border">Время доставки</span>
-            <span class="modal-info__text">13:00 - 15:00</span>
-          </div>
-          <div class="modal-info__item">
-            <span class="modal-info__title _border">Статус</span>
+            <span class="modal-info__title _border">
+              Статус
+            </span>
             <div class="modal-info__text status">
-              <span>Отменен</span>
-              <span>(Ошибочный заказ)</span>
+              <span>
+                {{ order.status === 'pending' ? 'Выполняется' : 'Выполнен' }}
+              </span>
             </div>
           </div>
           <div class="modal-info__item">
-            <span class="modal-info__title _border_none">Способ оплаты</span>
-            <span class="modal-info__text">Картой курьеру</span>
+            <span class="modal-info__title _border_none">
+              Способ оплаты
+            </span>
+            <span class="modal-info__text">
+              {{ order.payment_method_title }}
+            </span>
           </div>
         </div>
         <div class="modal-info__comment">
           <h2 class="modal-info__title">
             Комментарий
           </h2>
-          <textarea name="" id="" cols="30" rows="10"></textarea>
+          <textarea cols="30" rows="10" readonly :value="order.comment" />
         </div>
       </div>
       <div class="close" @click="close">
@@ -85,11 +97,17 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import CatalogItem from "@/components/catalog/CatalogItem";
 
 export default {
   name: 'orderModal',
   components: {CatalogItem},
+  computed: {
+    ...mapState('profile', {
+      order: 'currentOrder'
+    })
+  },
   methods: {
     close() {
       this.$store.commit('profile/SET_SHOW_INFO_ORDER', false)
@@ -106,7 +124,7 @@ export default {
   position: relative;
   margin: rem(125) auto rem(112);
   padding: rem(24) rem(24) rem(34) rem(24);
-  max-width: rem(1110);
+  width: rem(1110);
   background: #FFFFFF;
 
 }
@@ -129,7 +147,6 @@ export default {
 
 .catalog-info-container {
   position: relative;
-  margin-left: rem(116);
   display: flex;
   align-items: center;
   justify-content: space-between;

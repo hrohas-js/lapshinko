@@ -1,8 +1,12 @@
 <template>
   <div class="filter-options">
-    <div class="filter-option option" v-if="option != ''">{{ option }} <img src="@/assets/svg/close.svg"
-                                                                            alt="закрыть выбранный вариант"></div>
-    <div class="filter-option cancel" @click="clearAll">Сбросить все</div>
+    <div v-if="option !== ''" class="filter-option option">
+      {{ option }}
+      <img src="@/assets/svg/close.svg" alt="закрыть выбранный вариант">
+    </div>
+    <div class="filter-option cancel" @click="clearAll">
+      Сбросить все
+    </div>
   </div>
 </template>
 
@@ -14,18 +18,12 @@ export default {
       switch (this.$store.state.catalogSettings.filterOptionsParams) {
         case 'sale':
           return 'Со скидкой';
-          break;
-
         case 'new':
           return 'Новинка';
-          break;
-
         case 'promo':
           return 'Aкции';
-          break;
         case '':
           return '';
-          break;
       }
     }
   },

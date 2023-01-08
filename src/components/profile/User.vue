@@ -205,7 +205,7 @@ export default {
 .custom-radio:checked + label::before {
   cursor: pointer;
   border: 2px solid #629C42;
-  background: url("https://dreamteam-webdev.ru/lapshinkoServ/png/profile/legal.svg") center no-repeat;
+  background: url("http://lapshinka-api.store/lapshinkoServ/png/profile/legal.svg") center no-repeat;
 }
 
 .file-hidden {

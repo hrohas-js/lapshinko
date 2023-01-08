@@ -9,13 +9,15 @@
       <CartBody v-if="profileAction === 'basket'" />
       <orders v-if="profileAction === 'order' && width >= 770" />
       <cart-order-total v-if="width < 1025" />
-      <router-link to="/catalog" class="go-beak" v-if="width < 1025">Продолжить покупать</router-link>
-      <div class="orders-mobile-container" v-if="profileAction === 'order' && width < 770">
+      <router-link to="/catalog" class="go-back" v-if="width < 1025">
+        Продолжить покупать
+      </router-link>
+      <div v-if="profileAction === 'order' && width < 770" class="orders-mobile-container">
         <h1 class="_title">
           заказы
         </h1>
         <div class="__elem">
-          <orders-mobile v-for="order in $store.state.profile.ordersMobile" :order="order" :key="order.id" />
+          <orders-mobile v-for="order in orders" :order="order" :key="order.id" />
         </div>
       </div>
 
@@ -27,6 +29,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import UserLk from "@/components/profile/UserLk";
 import User from "@/components/profile/User";
 import Orders from "@/components/profile/Orders";
@@ -47,17 +50,15 @@ export default {
     UserLk
   },
   computed: {
-    profileAction() {
-      return this.$store.state.profile.userCurrentAction
-    },
-    width() {
-      return this.$store.state.displayWidth;
-    },
-    showModal() {
-      return this.$store.state.profile.showInfoOrder
-    }
+    ...mapState({
+      width: 'displayWidth'
+    }),
+    ...mapState('profile', {
+      profileAction: 'userCurrentAction',
+      showModal: 'showInfoOrder',
+      orders: 'orders'
+    })
   }
-
 }
 </script>
 
